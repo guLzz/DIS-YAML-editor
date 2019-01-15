@@ -1,0 +1,690 @@
+homeassistant:
+  auth_providers:
+   - type: homeassistant
+   - type: trusted_networks
+   - type: legacy_api_password
+  # Omitted values in this section will be auto detected using freegeoip.io
+
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude_home
+  longitude: !secret longitude_home
+  elevation: 322
+  # Name of the location where Home Assistant is running
+  name: Home
+  # C for Celcius, F for Fahrenheit
+  temperature_unit: F
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+  unit_system: imperial
+  customize: !include customize.yaml
+  customize_glob: !include customize_glob.yaml
+  packages: !include_dir_named packages
+  whitelist_external_dirs:
+    - '/home/homeassistant/.homeassistant/downloads'
+    - '/tmp'
+    - '/home/homeassistant/.homeassistant/downloads/camera/'
+lovelace:
+  mode: yaml
+updater:
+  include_used_components: true
+# influxdb:
+#   host: 192.168.2.113
+#   include:
+#     entities:
+#        - sensor.temperature_158d0001ab3b2b
+#        - sensor.humidity_158d0001ab3b2b
+#        - sensor.temperature_158d0001ab7d20
+#        - sensor.humidity_158d0001ab7d20
+#        - sensor.portfolioval
+#        - sensor.pws_temp_f
+#        - sensor.downstairsthermoper
+#        - sensor.upstairsthermoper
+#        - climate.downstairs
+#        - climate.upstairs
+python_script:
+weather:
+  - platform: yweather
+    name: yweather
+    woeid: !secret woeid
+  # - platform: darksky
+  #   api_key: !secret darksky_key
+# enable_debug:
+
+panel_custom:
+  - name: no-love
+    sidebar_title: No love
+    sidebar_icon: mdi:heart-off
+    webcomponent_path: /home/homeassistant/.homeassistant/panels/no-love.html
+
+zone:
+  name: Home
+  latitude: !secret latitude_home
+  longitude: !secret longitude_home
+  radius: 200
+  icon: mdi:home
+
+zone 2:
+  name: Buckhead
+  latitude: !secret latitude_buckhead
+  longitude: !secret longitude_buckhead
+  radius: 200
+  icon: mdi:school
+
+zone 3:
+  name: Downtown
+  latitude: !secret latitude_downtown
+  longitude: !secret longitude_downtown
+  radius: 200
+  icon: mdi:school
+zwave:
+  usb_path: /dev/ttyACM0
+  network_key: !secret zwave_network_key
+hue:
+  bridges:
+    - host: 192.168.2.229
+      allow_hue_groups: false
+lifx:
+  light:
+light:
+  # z-wave dimmer switch (http://amzn.to/2j1UEli)
+  - platform: mqtt
+    name: "Kitchen Lights"
+    state_topic: "smartthings/Kitchen/switch"
+    command_topic: "smartthings/Kitchen/switch"
+    payload_on: "on"
+    payload_off: "off"
+    brightness_state_topic: "smartthings/Kitchen/level"
+    brightness_command_topic: "smartthings/Kitchen/level"
+    brightness_scale: 99
+    brightness_value_template: '{{ value }}'
+    retain: true
+    optimistic: false
+    qos: 0
+  - platform: group
+    name: Living Room Lights
+    entities:
+      - light.lifx3
+      - light.lifxnrguest
+      - light.lifxnrkitchen
+  - platform: group
+    name: Master Lights
+    entities:
+      - light.hue_color_lamp_1
+      - light.hue_color_lamp_2
+      - light.hue_color_lamp_3
+wemo:
+  static:
+    - 192.168.2.104
+    - 192.168.2.130
+    - 192.168.2.206
+    - 192.168.2.237
+arlo:
+  username: !secret arlo_user
+  password: !secret arlo_password
+  scan_interval: 120
+tuya:
+  username: !secret tuya_user
+  password: !secret tuya_password
+  country_code: 1
+alarm_control_panel:
+  # - platform: ifttt
+  #   name: "Abode"
+  - platform: ifttt
+    name: ArloHome
+    event_arm_away: arlo_alarm_arm_away
+    event_disarm: arlo_alarm_disarm
+    optimistic: true
+  # - platform: arlo
+xiaomi_aqara:
+  gateways:
+    - key: !secret xiaomikey
+      host: 192.168.2.82
+abode:
+  username: !secret abode_username
+  password: !secret abode_password
+ring:
+  username: !secret ring_username
+  password: !secret ring_password
+bloomsky:
+  api_key: !secret bloomsky_key
+ecobee:
+  api_key: !secret ecobee_key
+  hold_temp: True
+
+shell_command:
+  image_classify: bash /home/homeassistant/.homeassistant/shell_scripts/image_classification.sh "{{camera}}"
+  facebox: bash /home/homeassistant/.homeassistant/shell_scripts/facebox.sh "{{camera}}"
+
+rest_command:
+  youtube:
+    url: 'http://192.168.2.252:8001/api/v2/applications/111299001912'
+    method: post
+  netflix:
+    url: 'http://192.168.2.252:8001/ws/apps/Netflix'
+    method: post
+  plex:
+    url: 'http://192.168.2.252:8001/api/v2/applications/kIciSQlYEM.plex'
+    method: post
+
+media_extractor:
+
+# Enables configuration UI
+config:
+
+cloud:
+  alexa:
+    filter:
+      include_entities:
+        - light.living_room_lights
+        - light.master_lights
+        - input_boolean.abodeupdate
+        - light.gateway_light_34ce00813670
+        - light.kitchen_lights
+        - light.lifx5
+        - switch.driveway
+        - switch.garage_relay_switch
+        - switch.wemoporch
+        - script.tv_youtube_on
+      include_domains:
+        - cover
+    entity_config:
+      light.gateway_light_34ce00813670:
+        name: Gateway Light
+        description: Xiaomi Gateway Light
+      script.tv_youtube_on:
+        name: Youtube
+        description: Youtube on
+
+  google_actions:
+    filter:
+      include_entities:
+        - script.tv_youtube_on
+        - switch.wemoporch
+        - switch.driveway
+        - switch.wemoinsight
+      include_domains:
+        - cover
+        - light
+      exclude_entities:
+        - light.gateway_light_34ce00813670
+        - light.hue_color_lamp_1
+        - light.hue_color_lamp_2
+        - light.hue_color_lamp_3
+        - light.lifx3
+        - light.lifxnrguest
+        - light.lifxnrkitchen
+    entity_config:
+      light.living_room_lights:
+        room: living room
+      light.master_lights:
+        room: master bedroom
+      switch.driveway:
+        room: driveway
+      switch.wemoporch:
+        name: Porch Lights
+        room: porch
+      light.kitchen_lights:
+        room: kitchen
+      light.lifx5:
+        room: garage
+      switch.wemoinsight:
+        name: Wemo Insight
+        room: office
+      script.tv_youtube_on:
+        name: Youtube
+        room: living room
+
+google_assistant:
+  project_id: !secret google_project_id
+  api_key: !secret google_project_api_key
+  expose_by_default: false
+  exposed_domains:
+    - cover
+  entity_config:
+    light.living_room_lights:
+      expose: true
+      room: living room
+    light.master_lights:
+      expose: true
+      room: master bedroom
+    switch.driveway:
+      expose: true
+      room: driveway
+    switch.wemoporch:
+      expose: true
+      name: Porch Lights
+      room: porch
+    light.kitchen_lights:
+      expose: true
+      room: kitchen
+    light.lifx5:
+      expose: true
+      room: garage
+    switch.wemoinsight:
+      expose: true
+      name: Wemo Insight
+      room: office
+    script.tv_youtube_on:
+      expose: True
+      name: Youtube
+      room: living room
+map:
+downloader:
+  download_dir: downloads
+http:
+  api_password: !secret http_password
+  ssl_certificate: !secret ssl_certificate
+  ssl_key: !secret ssl_key
+  base_url: !secret base_url
+  ip_ban_enabled: True
+  login_attempts_threshold: 2
+  trusted_networks:
+    - 192.168.2.0/24
+
+# Discover some devices automatically
+discovery:
+  ignore:
+    - apple_tv
+    - panasonic_viera
+
+proximity:
+  alok:
+    devices:
+      - device_tracker.meta_alok
+    tolerance: 50
+    unit_of_measurement: mi
+  rashmi:
+    devices:
+      - device_tracker.meta_rashmi
+    tolerance: 50
+    unit_of_measurement: mi
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+ffmpeg:
+camera:
+  - platform: bloomsky
+  - platform: synology
+    url: http://192.168.2.113:5000/
+    username: !secret synology_username
+    password: !secret synology_password
+    timeout: 15
+    verify_ssl: False
+  - platform: arlo
+  - platform: ring
+  - platform: local_file
+    name: Driveway TF
+    file_path: /home/homeassistant/.homeassistant/downloads/camera/driveway_latest.jpg
+  - platform: local_file
+    name: Porch TF
+    file_path: /home/homeassistant/.homeassistant/downloads/camera/porch_latest.jpg
+  - platform: local_file
+    name: Patio TF
+    file_path: /home/homeassistant/.homeassistant/downloads/camera/patio_latest.jpg
+  - platform: local_file
+    name: Backyard TF
+    file_path: /home/homeassistant/.homeassistant/downloads/camera/backyard_latest.jpg
+  - platform: generic
+    still_image_url: !secret meteogram_png_url
+    name: Meteogram
+  # Generate your link - https://www.wunderground.com/weather-radar/united-states/
+  # - platform: generic
+  #   still_image_url: 'https://icons.wxug.com/data/weather-maps/radar/united-states/columbus-georgia-region-current-radar-animation.gif'
+  #   name: WundergroundRadar
+  # - platform: generic
+  #   name: worldtime
+  #   still_image_url: https://imgs.xkcd.com/comics/now.png
+  # - platform: generic
+  #   name: LivingRoom_temperature
+  #   still_image_url: 'http://192.168.2.113:3000/render/d-solo/000000001/home-assistant?orgId=1&panelId=1&width=1000&height=500&tz=UTC-05%3A00'
+  #   username: !secret grafana_user
+  #   password: !secret grafana_pass
+  # - platform: local_file
+  #   name: Grafana_temperature
+  #   file_path: /home/homeassistant/.homeassistant/downloads/temperature.png
+  # - platform: ring
+  # - platform: opencv
+  #   camera: camera.porch
+  #   processor: image_processing.opencv_porch
+  #   name: OpenCV Porch
+  # - platform: generic
+  #   still_image_url: !secret porch_camera_image_url
+  #   name: porch2
+  # - platform: opencv
+  #   camera: camera.motoe
+  #   processor: image_processing.opencv_motoe
+  #   name: OpenCV MotoE
+  # - platform: opencv
+  #   camera: camera.porch
+  #   processor: image_processing.opencv_porch
+  #   name: OpenCV Porch
+  # - platform: opencv
+  #   camera: camera.backyard
+  #   processor: image_processing.opencv_backyard
+  #   name: OpenCV Backyard
+  # - platform: opencv
+  #   camera: camera.driveway
+  #   processor: image_processing.opencv_driveway
+  #   name: OpenCV Driveway
+  # - platform: generic
+  #   still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?station=FFC&brand=wui&num=1&delay=100&type=NTP&frame=0&scale=1&noclutter=0&showstorms=5&mapx=400&mapy=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=0&rainsnow=0&lightning=0&smooth=0&rand=24427697&lat=0&lon=0&label=you'
+  #   name: RadarGA
+    # Generate link - http://www.intellicast.com/National/Radar/Current.aspx
+  # - platform: generic
+  #   still_image_url: 'http://images.intellicast.com/WxImages/RadarLoop/prc_None_anim.gif'
+  #   name: IntellicastRadar
+
+ifttt:
+  key: !secret ifttt_key
+
+image_processing:
+  - platform: facebox
+    scan_interval: 10000
+    ip_address: 192.168.2.212
+    port: 8082
+    source:
+      - entity_id: camera.patio
+      - entity_id: camera.porch
+      - entity_id: camera.backyard
+      - entity_id: camera.driveway
+  - platform: tagbox
+    scan_interval: 10000 # Default 10
+    ip_address: 192.168.2.212
+    confidence: 50
+    port: 8081
+    source:
+      - entity_id: camera.patio
+      - entity_id: camera.porch
+      - entity_id: camera.backyard
+      - entity_id: camera.driveway
+  - platform: opencv_darknet
+    name: Camera Object Detection
+    scan_interval: 10000 # Default 10
+    source:
+      - entity_id: camera.patio
+      - entity_id: camera.porch
+      - entity_id: camera.backyard
+      - entity_id: camera.driveway
+    options:
+      detect_model: /home/homeassistant/.homeassistant/deps/yolov3-tiny.cfg
+      weights: /home/homeassistant/.homeassistant/deps/yolov3-tiny.weights
+      labels: /home/homeassistant/.homeassistant/deps/coco.names
+      confidence: 0.55
+  - platform: tensorflow
+    confidence: 75
+    scan_interval: 10000
+    source:
+      - entity_id: camera.patio
+    file_out:
+      - "/home/homeassistant/.homeassistant/downloads/camera/{{ camera_entity.split('.')[1] }}_latest.jpg"
+      # - "/home/homeassistant/.homeassistant/downloads/camera/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+    model:
+      graph: /home/homeassistant/.homeassistant/deps/frozen_inference_graph.pb
+      model_dir: /home/homeassistant/.homeassistant/deps/tensorflow
+      labels: /home/homeassistant/.homeassistant/deps/tensorflow/object_detection/data/mscoco_label_map.pbtxt
+      categories:
+        - person
+  - platform: tensorflow
+    confidence: 75
+    scan_interval: 10000
+    source:
+      - entity_id: camera.backyard
+      - entity_id: camera.driveway
+      - entity_id: camera.porch
+    file_out:
+      - "/home/homeassistant/.homeassistant/downloads/camera/{{ camera_entity.split('.')[1] }}_latest.jpg"
+      # - "/home/homeassistant/.homeassistant/downloads/camera/{{ camera_entity.split('.')[1] }}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+    model:
+      graph: /home/homeassistant/.homeassistant/deps/frozen_inference_graph.pb
+      model_dir: /home/homeassistant/.homeassistant/deps/tensorflow
+      labels: /home/homeassistant/.homeassistant/deps/tensorflow/object_detection/data/mscoco_label_map.pbtxt
+      categories:
+        - category: person
+          area:
+            top: 0.20
+        - bus
+        - category: truck
+          area:
+            top: 0.20
+            right: 0.20
+        - category: car
+          area:
+            top: 0.20
+            right: 0.20
+
+  # - platform: classificationbox
+  #   scan_interval: 10000
+  #   ip_address: 192.168.2.212
+  #   port: 8083
+  #   confidence: 50
+  #   source:
+  #     - entity_id: camera.porch
+  # - platform: sighthound
+  #   api_key: sighthound_api
+  #   scan_interval: 10000
+  #   source:
+  #     - entity_id: camera.porch
+# image_processing:
+#   - platform: clarifai
+#     name: general_classifier
+#     api_key: !secret clarifai_api
+#     model_id: a403429f2ddf4b49b307e318f00e528b
+#     file_path: /home/homeassistant/.homeassistant/downloads/porch.jpg
+
+# android_ip_webcam:
+#   - host: 192.168.2.176
+#     name: motoe
+#     scan_interval: 1
+# image_processing:
+#   - platform: opencv
+#     name: OpenCV
+#     source:
+#       - entity_id: camera.porch
+#     classifier:
+#       body:
+#         file: /home/homeassistant/.homeassistant/classifier/haarcascade_fullbody.xml
+#         neighbors: 4
+  # - platform: dlib_face_detect
+  #   source:
+  #     - entity_id: camera.porch
+  #       name: "Face Detected porch"
+  #     - entity_id: camera.backyard
+  #       name: "Face Detected backyard"
+  #     - entity_id: camera.driveway
+  #       name: "Face Detected driveway"
+  #     - entity_id: camera.patio
+  #       name: "Face Detected patio"
+
+sonos:
+  media_player:
+    hosts:
+      - 192.168.2.150
+      - 192.168.2.253
+sun:
+media_player:
+  - platform: kodi
+    host: 192.168.2.28
+    port: 8080
+    name: Kodi NSTV
+    username: !secret kodi_username
+    password: !secret kodi_password
+  # - platform: panasonic_viera
+  #   host: 192.168.2.242
+  #   port: 55000
+  #   name: Panasonic Viera TV
+  - platform: samsungtv
+    host: 192.168.2.252
+    name: Living Room TV
+    mac: !secret samsungtvmac
+    port: 8001
+    timeout: 5
+  - platform: alexa
+    email: !secret amazon_user
+    password: !secret amazon_pass
+    url: "amazon.com"
+  # - platform: firetv
+  #   name: Fire Stick Master
+  #   host: 192.168.2.225
+  #   adbkey: /home/homeassistant/.homeassistant/deps/ftv4kstick/adbkey
+  # - platform: androidtv
+  #   host: 192.168.2.28
+  #   name: ShieldTV
+  #   adbkey: /home/homeassistant/.homeassistant/deps/.android/adbkey
+  # - platform: spotify
+  #   client_id: !secret spotify_client_id
+  #   client_secret: !secret spotify_client_secret
+  # - platform: plex
+  #   host: 192.168.2.212
+  # - platform: apple_tv
+  #   host: 192.168.2.90
+  #   login_id: !secret apple_hsgid
+geofency:
+owntracks:
+  max_gps_accuracy: 200
+device_tracker:
+  - platform: unifi
+    host: 192.168.2.163
+    username: !secret unifi_username
+    password: !secret unifi_password
+    verify_ssl: False
+  # - platform: composite
+  #   name: alok composite
+  #   entity_id:
+  #     - device_tracker.myiphone
+  #     - device_tracker.alokphone_alokphone
+  #     - device_tracker.alokiosiphone
+  #     - device_tracker.alok_alok
+  #     - device_tracker.b4445761f6c04b7f835fcfdc03b47111
+telegram_bot:
+  platform: polling
+  api_key: !secret telegram_key
+  allowed_chat_ids:
+    - !secret telegram_chatID_Alok
+hangouts:
+notify:
+  - platform: ios
+  - platform: hangouts
+    name: alok_hangouts
+    default_conversations:
+      - id: !secret hangouts_alok
+  - platform: hangouts
+    name: rashmi_hangouts
+    default_conversations:
+      - id: !secret hangouts_rashmi
+  - platform: hangouts
+    name: parents_hangouts
+    default_conversations:
+      - id: !secret hangouts_rashmi
+      - id: !secret hangouts_alok
+  - platform: pushbullet
+    api_key: !secret pushbullet_key
+    name: pushbullet
+  - name: telegram
+    platform: telegram
+    api_key: !secret telegram_key
+    chat_id: !secret telegram_chatID_Alok
+  - platform: ecobee
+    name: ecobee
+  - platform: group
+    name: iOS
+    services:
+      - service: ios_alokiosiphone
+      - service: ios_rashmiappiphone
+  - platform: group
+    name: ios_abode_updates
+    services:
+      - service: ios_alokiosiphone
+        data:
+          title: 'Enable Abode updates?'
+          data:
+            push:
+              badge: 0
+              category: "abode_updates"
+  - platform: nfandroidtv
+    name: Shield
+    host: 192.168.2.28
+  - platform: command_line
+    name: 'Echo Dot'
+    command: "/home/homeassistant/.homeassistant/shell_scripts/alexa_wrapper.sh -d 'Echo Dot Gen2'"
+# Log Severities: notset, debug, info, warn, warning, error, fatal, critical
+logger:
+  default: error
+  logs:
+    homeassistant.components.image_processing: critical
+    homeassistant.components.camera.synology: critical
+    homeassistant.components.camera.generic: critical
+    homeassistant.components.sensor.wunderground: critical
+    homeassistant.components.sensor.pi_hole: critical
+    homeassistant.components.media_player: critical
+    homeassistant.components.telegram_bot: critical
+    homeassistant.components.scene.lifx_cloud: critical
+    homeassistant.components.sensor.darksky: critical
+    pychromecast.socket_client: critical
+    aiohttp.access: critical
+    aiohttp.server: critical
+    haffmpeg.core: critical
+    homeassistant.core: critical
+    pywemo.ouimeaux_device: critical
+    pywemo.ssdp: critical
+    homeassistant.helpers.entity: critical
+    custom_components.sensor.life360: critical
+    custom_components.alarm_control_panel: critical
+    homeassistant.components.http.ban: warning
+    homeassistant.components.python_script: warning
+    # homeassistant.components.http.view: info
+    custom_components.sensor.personalcapital: debug
+    # adb.adb_commands: debug
+    # adb.adb_protocol: debug
+    # homeassistant.components.device_tracker: info
+# Text to speech
+tts:
+  - platform: google
+    cache: true
+    cache_dir: /home/homeassistant/.homeassistant/tts
+    time_memory: 300
+  # - platform: voicerss
+  #   api_key: !secret voicerss_key
+  # - platform: amazon_polly
+  #   aws_access_key_id: !secret aws_access_key_id
+  #   aws_secret_access_key: !secret aws_secret_access_key
+  #   text_type: ssml
+  #   cache: True
+remote:
+  - platform: harmony
+    name: livingroom
+    host: 192.168.2.152
+
+google:
+  client_id: !secret gcal_client_id
+  client_secret: !secret gcal_client_secret
+
+scene:
+  platform: lifx_cloud
+  token: !secret lifx_key
+mqtt:
+  broker: 127.0.0.1
+  port: 1883
+  client_id: home-assistant-1
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+alexa:
+dialogflow:
+intent_script: !include intent_script.yaml
+ios: !include ios.yaml
+alert: !include alert.yaml
+automation: !include automations.yaml
+cover: !include cover.yaml
+group: !include groups.yaml
+script: !include scripts.yaml
+sensor: !include sensor.yaml
+switch: !include switches.yaml
+binary_sensor: !include binary_sensor.yaml
+input_select: !include input_select.yaml
+input_boolean: !include input_boolean.yaml
+input_number: !include input_number.yaml
+input_text: !include input_text.yaml
+frontend: !include frontend.yaml
+recorder: !include recorder.yaml
+logbook: !include logbook.yaml
+history: !include history.yaml

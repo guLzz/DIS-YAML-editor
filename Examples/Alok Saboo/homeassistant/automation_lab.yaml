@@ -1,0 +1,157 @@
+################################################################
+## Unused automations
+################################################################
+- id: ring_camera_notification
+  alias: 'Notify Ring camera'
+  initial_state: 'on'
+  condition:
+    - condition: state
+      entity_id: input_select.abodestatus
+      state: 'armed_away'
+  trigger:
+   - platform: state
+     entity_id: sensor.ringvideourl
+  action:
+    - service: notify.ios
+      data_template:
+        message: "Check Ring camera."
+        data:
+          push:
+            category: camera
+          entity_id: camera.front_door
+          attachment:
+            url: "{{ states.camera.front_door.attributes.video_url }}"
+
+- id: ring_download_video
+  alias: 'Ring download video'
+  initial_state: 'on'
+  trigger:
+   - platform: state
+     entity_id: sensor.ringvideourl
+  action:
+    - service: downloader.download_file
+      data_template:
+        url: "{{ states.camera.front_door.attributes.video_url }}"
+        subdir: "{{'ring_' + states.camera.front_door.attributes.friendly_name.lower().replace(' ', '_')}}"
+        overwrite: True
+        filename: "{{states.camera.front_door.attributes.friendly_name.lower().replace(' ', '_')+ '.mp4'}}"
+
+# Call python_script.dark_sky_friendly_names
+- id: update_friendly_names
+  alias: "Update Dark Sky friendly names"
+  initial_state: 'on'
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.forecast_1
+        - sensor.forecast_2
+        - sensor.forecast_3
+        - sensor.forecast_4
+        - sensor.forecast_5
+        - sensor.forecast_6
+        - sensor.forecast_7
+  action:
+    - service: python_script.dark_sky_friendly_names
+      data_template:
+        entityid: '{{trigger.entity_id}}'
+
+
+- id: notify_camera_pictures_telegram
+  alias: 'Notify camera pictures using Telegram'
+  initial_state: 'on'
+  trigger:
+   - platform: time
+     minutes: '/2'
+     seconds: 00
+  action:
+    - service: notify.telegram
+      data_template:
+        message: "Check camera."
+        data:
+          photo:
+            - url: !secret porch_camera_image_url
+              caption: "Test"
+
+## Automate Christmas Lights
+- id: turn_on_christmas_light
+  alias: Turn Christmas Lights On At Sunset
+  initial_state: 'on'
+  trigger:
+    platform: sun
+    event: sunset
+  action:
+    service: homeassistant.turn_on
+    entity_id: switch.wemoswitch
+
+- id: turn_off_christmas_light
+  alias: Turn Christmas Lights Off At Midnight
+  initial_state: 'on'
+  trigger:
+    platform: time
+    at: '23:30:00'
+  action:
+    service: homeassistant.turn_off
+    entity_id: switch.wemoswitch
+
+
+- alias: 'Switch turned on when nobody is home v1'
+  condition:
+    condition: state
+    entity_id: input_select.abodestatus
+    state: 'away'
+  trigger:
+    - platform: state
+      entity_id:
+        - group.all_switches
+      to: 'on'
+  action:
+    - service: notify.pushbullet
+      data_template:
+        message: >
+          {% for entity in states.group.all_switches.attributes.entity_id %}
+            {%- if is_state(entity, 'on') %}
+              {{ states[entity.split('.')[0]][entity.split('.')[1]].name }}
+            {%- endif %}
+          {%- endfor %}
+        title: "Switch turned on"
+        target: device/myiPhone
+
+- alias: 'Switch turned on when nobody is home v2'
+  condition:
+    condition: state
+    entity_id: input_select.abodestatus
+    state: 'away'
+  trigger:
+    - platform: state
+      entity_id:
+        - group.all_switches
+      to: 'on'
+  action:
+    - service: notify.pushbullet
+      data_template:
+        message: >
+          {% for entity in states.group.all_switches.attributes.entity_id if is_state(entity, 'on') %}
+            {%- if loop.first and loop.last %}
+              {{ states[entity.split('.')[0]][entity.split('.')[1]].name }} is on.
+            {% elif loop.length == length(states.group.all_switches.attributes.entity_id) %}
+              {{ "All switches are on." if loop.last }}
+            {% else %}
+              {%- if loop.first %}{% elif loop.last %} & {% else %}, {% endif -%}
+              {{ states[entity.split('.')[0]][entity.split('.')[1]].name }}{{ " are on" if loop.last }}
+            {%- endif -%}
+          {% else %}
+            All switches are off.
+          {% endfor %}
+        title: "Switch turned on"
+        target: device/myiPhone
+- alias: 'Change Lifx color'
+  trigger:
+   - platform: time
+     minutes: '/1'
+     seconds: 00
+  action:
+     service: ifttt.trigger
+     data_template: {"event":"lifxcolor", "value1":"{{ '{:02x}{:02x}{:02x}'.format(range(0, 255) | random, range(0, 255) | random, range(0, 255) | random) }}"}
+#################################################################
+## Unused Sensors
+#################################################################

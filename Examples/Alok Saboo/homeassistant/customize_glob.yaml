@@ -1,0 +1,22 @@
+input_boolean.*:
+ templates:
+   icon_color: >
+     if (state === 'on') return 'rgb(251, 210, 41)'; return 'rgb(54, 95, 140)';
+sensor.*_futures_change:
+ templates:
+   icon_color: >
+     if (state > 0) return 'rgb(50,205,50)'; else return 'rgb(178,34,34)';
+sensor.*_futures_change_pct:
+  templates:
+    icon_color: >
+      if (state < -5) return 'rgb(151, 26, 30)';
+      if (state < -4) return 'rgb(194, 39, 45)';
+      if (state < -3) return 'rgb(236, 27, 33)';
+      if (state < -2) return 'rgb(244, 101, 35)';
+      if (state < -1) return 'rgb(248, 147, 29)';
+      if (state < 0) return 'rgb(255, 194, 15)';
+      if (state < 1) return 'rgb(202, 219, 43)';
+      if (state < 2) return 'rgb(142, 198, 65)';
+      if (state < 3) return 'rgb(106, 158, 47)';
+      if (state < 4) return 'rgb(37, 145, 60)';
+      return 'rgb(0, 111, 58)';

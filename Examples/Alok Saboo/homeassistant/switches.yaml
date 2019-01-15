@@ -1,0 +1,148 @@
+#################################################################
+## Switches
+#################################################################
+  - platform: hikvisioncam
+    host: 192.168.2.91
+    name: PorchMotion
+    username: !secret hikvision_username
+    password: !secret hikvision_password
+  - platform: hikvisioncam
+    host: 192.168.2.92
+    name: BackyardMotion
+    username: !secret hikvision_username
+    password: !secret hikvision_password
+  - platform: hikvisioncam
+    host: 192.168.2.93
+    name: PatioMotion
+    username: !secret hikvision_username
+    password: !secret hikvision_password
+  - platform: hikvisioncam
+    host: 192.168.2.94
+    name: DrivewayMotion
+    username: !secret hikvision_username
+    password: !secret hikvision_password
+  - platform: template
+    switches:
+      downstairs_away:
+        friendly_name: Downstairs Away
+        value_template: "{{(states.climate.downstairs.attributes|default({})).away_mode|default('off') == 'on'}}"
+        turn_on:
+          - service: climate.set_away_mode
+            data:
+              entity_id: climate.downstairs
+              away_mode: 'True'
+        turn_off:
+          - service: climate.set_away_mode
+            data:
+              entity_id: climate.downstairs
+              away_mode: 'False'
+      upstairs_away:
+        friendly_name: Upstairs Away
+        value_template: "{{(states.climate.upstairs.attributes|default({})).away_mode|default('off') == 'on'}}"
+        turn_on:
+          - service: climate.set_away_mode
+            data:
+              entity_id: climate.upstairs
+              away_mode: 'True'
+        turn_off:
+          - service: climate.set_away_mode
+            data:
+              entity_id: climate.upstairs
+              away_mode: 'False'
+      bedroom_away:
+        friendly_name: Master Away
+        value_template: "{{(states.climate.bedroom.attributes|default({})).away_mode|default('off') == 'on'}}"
+        turn_on:
+          - service: climate.set_away_mode
+            data:
+              entity_id: climate.bedroom
+              away_mode: 'True'
+        turn_off:
+          - service: climate.set_away_mode
+            data:
+              entity_id: climate.bedroom
+              away_mode: 'False'
+      security_armed:
+        friendly_name: Home Security Arm
+        value_template: "{{states('alarm_control_panel.abode_alarm') != 'disarmed'}}"
+        turn_on:
+          - service: alarm_control_panel.alarm_arm_away
+            entity_id:
+              - alarm_control_panel.abode_alarm
+              - alarm_control_panel.arlohome
+        turn_off:
+          - service: alarm_control_panel.alarm_disarm
+            entity_id:
+              - alarm_control_panel.abode_alarm
+              - alarm_control_panel.arlohome
+      sonos_night_sound:
+        friendly_name: Sonos Night Sound
+        value_template: "{{state_attr('media_player.family_room_2','night_sound')}}"
+        turn_on:
+          - service: media_player.sonos_set_option
+            data:
+              entity_id: media_player.family_room_2
+              night_sound: True
+        turn_off:
+          - service: media_player.sonos_set_option
+            data:
+              entity_id: media_player.family_room_2
+              night_sound: False
+      sonos_speech_enhance:
+        friendly_name: Sonos Speech Enhance
+        value_template: "{{state_attr('media_player.family_room_2','speech_enhance')}}"
+        turn_on:
+          - service: media_player.sonos_set_option
+            data:
+              entity_id: media_player.family_room_2
+              speech_enhance: True
+        turn_off:
+          - service: media_player.sonos_set_option
+            data:
+              entity_id: media_player.family_room_2
+              speech_enhance: False
+# example of PiHole commands (PWHASH is the value of WEBPASSWORD in /etc/pihole/setupVars.conf)
+# pihole_status: "curl -X GET 'http://ip.ad.dr.ess/admin/api.php?status&auth=PWHASH'"
+# pihole_enable: /usr/bin/curl -k 'http://ip.ad.dr.ess/admin/api.php?enable=300&auth=PWHASH'
+# pihole_disable: /usr/bin/curl -k 'http://ip.ad.dr.ess/admin/api.php?disable=300&auth=PWHASH'
+  - platform: command_line
+    switches:
+      pihole:
+        command_on: !secret pihole_enable
+        command_off: !secret pihole_disable
+        command_state: !secret pihole_status
+        value_template: "{{ value_json.status == 'enabled' }}"
+        friendly_name: PiHole
+
+  # - platform: command_line
+  #   switches:
+  #     utubeon:
+  #       command_on: curl -X POST http://192.168.2.252:8001/api/v2/applications/111299001912
+  #       command_off: curl -X DELETE http://192.168.2.252:8001/api/v2/applications/111299001912
+  #       friendly_name: "Turn on Youtube"
+  #       command_state: off
+  #     netflixon:
+  #       command_on: curl -X POST http://192.168.2.252:8001/ws/apps/Netflix
+  #       command_off: curl -X POST http://192.168.2.252:8001/api/v2/applications/RN1MCdNq8t
+  #       command_state: curl -X GET http://192.168.2.252:8001/ws/apps/Netflix
+  #       friendly_name: "Turn on Netflix"
+  #     plexon:
+  #       command_on: curl -X POST http://192.168.2.252:8001/api/v2/applications/kIciSQlYEM.plex
+  #       command_off: curl -X POST http://192.168.2.252:8001
+  #       command_state: off
+  #       friendly_name: "Turn on Plex"
+#  platform: command_line
+#  switches:
+#    #Switch for Foscam Motion Detection
+#    foscam_record:
+#      command_on: 'curl -k "http://192.168.2.173:88/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=1&linkage=8&snapInterval=5&sensitivity=2&triggerInterval=10&isMovAlarmEnable=1&isPirAlarmEnable=1&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=1023&area1=1023&area2=1023=&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023&usr=arsaboo&pwd=alok18"'
+#      command_off: 'curl -k "http://192.168.2.173:88/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=0&linkage=8&snapInterval=5&sensitivity=2&triggerInterval=10&isMovAlarmEnable=0&isPirAlarmEnable=0&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=1023&area1=1023&area2=1023=&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023&usr=arsaboo&pwd=alok18"'
+#      value_template: ''
+#    foscam_record2:
+#      command_on: 'curl -k "http://192.168.2.224:88/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=1&linkage=8&snapInterval=5&sensitivity=2&triggerInterval=10&isMovAlarmEnable=1&isPirAlarmEnable=1&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=1023&area1=1023&area2=1023=&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023&usr=arsaboo&pwd=alok18"'
+#      command_off: 'curl -k "http://192.168.2.224:88/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=0&linkage=8&snapInterval=5&sensitivity=2&triggerInterval=10&isMovAlarmEnable=0&isPirAlarmEnable=0&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=1023&area1=1023&area2=1023=&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023&usr=arsaboo&pwd=alok18"'
+#      value_template: ''
+#    foscam_record3:
+#      command_on: 'curl -k "http://192.168.2.50:88/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=1&linkage=8&snapInterval=5&sensitivity=2&triggerInterval=10&isMovAlarmEnable=1&isPirAlarmEnable=1&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=1023&area1=1023&area2=1023=&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023&usr=arsaboo&pwd=alok18"'
+#      command_off: 'curl -k "http://192.168.2.50:88/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=0&linkage=8&snapInterval=5&sensitivity=2&triggerInterval=10&isMovAlarmEnable=0&isPirAlarmEnable=0&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=1023&area1=1023&area2=1023=&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023&usr=arsaboo&pwd=alok18"'
+#      value_template: ''
