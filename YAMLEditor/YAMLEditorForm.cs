@@ -169,5 +169,55 @@ namespace YAMLEditor
                 }
             }
         }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mainPropertyGrid_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cutToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void copyToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pasteToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void helpToolStripButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
