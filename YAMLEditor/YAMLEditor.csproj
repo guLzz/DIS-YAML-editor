@@ -49,6 +49,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeCommand.cs" />
     <Compile Include="Observer.cs" />
     <Compile Include="YAMLEditorForm.cs">
       <SubType>Form</SubType>
