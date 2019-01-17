@@ -35,6 +35,10 @@ namespace YAMLEditor
                 Directory.SetCurrentDirectory( Path.GetDirectoryName( dialog.FileName ) ?? "" );
 
                 mainTreeView.Nodes.Clear();
+                mainTreeView.Nodes.Add("new");
+                mainTreeView.Nodes[0].Nodes.Add("child");
+                mainTreeView.Nodes[0].Nodes[0].Nodes.Add("child child");
+                mainTreeView.Nodes.Add("parent 2");
                 var root = mainTreeView.Nodes.Add( Path.GetFileName( dialog.FileName ) );
                 root.ImageIndex = root.SelectedImageIndex = 3;
                 LoadFile( root, dialog.FileName );
@@ -172,6 +176,13 @@ namespace YAMLEditor
 
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
+
+            var dialog = new SaveFileDialog()
+                { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
+
+            if (dialog.ShowDialog() == DialogResult.OK){
+                string filename = dialog.FileName;
+            }
 
         }
 
