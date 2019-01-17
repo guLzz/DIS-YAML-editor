@@ -5,11 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using YamlDotNet.RepresentationModel;
+using YamlDotNet.Core;
 
 namespace YAMLEditor
 {
@@ -89,7 +91,6 @@ namespace YAMLEditor
                     var node = root.Nodes.Add( key.Value );
                     node.Tag = child.Value;
                     node.ImageIndex = node.SelectedImageIndex = GetImageIndex( child.Value );
-
                     LoadChildren( node, child.Value as YamlSequenceNode );
                 }
                 else if ( child.Value is YamlMappingNode )
@@ -193,59 +194,94 @@ namespace YAMLEditor
         private void onSave(object sender, EventArgs e)
         {
 
-
-
             var dialog = new SaveFileDialog()
                 { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
 
             if (dialog.ShowDialog() == DialogResult.OK){
-                string filename = dialog.FileName;
+                string filename = dialog.FileName;             
+                SaveTree(mainTreeView,filename);
             }
 
         }
 
+        public static void SaveTree(TreeView tree, string filename)
+        {
+            //using (Stream file = File.Open(filename, FileMode.Create))
+            //{
+            //    //var nodeList = tree.Nodes.Cast<TreeNode>().ToList();
+            //    var yaml = new YamlStream(
+            //        new YamlDocument(
+            //            foreach (var node in tree.Nodes)
+            //            {
+            //                new YamlMappingNode((string)node);
+            //            }
+            //        );
+            //    );
+            //    using (TextWriter writer = File.CreateText(filename))
+            //    {
+            //        yaml.Save(writer, false);
+            //    }
+            //}
+        }
+
+
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
+            mainTreeView.Nodes.Clear();
+            mainTreeView.Nodes.Add("type: value");
+            doWizard();
 
         }
 
-        private void mainPropertyGrid_Click(object sender, EventArgs e)
+        private void doWizard()
         {
             
         }
 
+        private void mainPropertyGrid_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("main click");
+        }
+
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("edit");
 
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("undo");
 
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("redo");
 
         }
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("cut");
 
         }
 
         private void copyToolStripButton_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("copy");
 
         }
 
         private void pasteToolStripButton_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("paste");
 
         }
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("halp");
 
         }
 
@@ -276,6 +312,11 @@ namespace YAMLEditor
             }
             else
                 newTypeB.Text = "";
+        }
+
+        private void newNode_Click(object sender, EventArgs e)
+        {
+            mainTreeView.SelectedNode.Nodes.Add("type: value");
         }
     }
 }
