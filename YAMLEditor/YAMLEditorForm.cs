@@ -191,39 +191,34 @@ namespace YAMLEditor
             }
         }
 
+        private string convertTreeViewtoCode()
+        {
+            var code = "";
+
+            var root = mainTreeView.TopNode;
+
+
+
+            return code;
+        }
+
         private void onSave(object sender, EventArgs e)
         {
+            var fileText = convertTreeViewtoCode();
 
             var dialog = new SaveFileDialog()
                 { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
 
-            if (dialog.ShowDialog() == DialogResult.OK){
-                string filename = dialog.FileName;             
-                SaveTree(mainTreeView,filename);
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                using (Stream s = File.Open(dialog.FileName, FileMode.Create))
+                using (StreamWriter sw = new StreamWriter(s))
+                {
+                    sw.Write("hey");
+                }
             }
 
         }
-
-        public static void SaveTree(TreeView tree, string filename)
-        {
-            //using (Stream file = File.Open(filename, FileMode.Create))
-            //{
-            //    //var nodeList = tree.Nodes.Cast<TreeNode>().ToList();
-            //    var yaml = new YamlStream(
-            //        new YamlDocument(
-            //            foreach (var node in tree.Nodes)
-            //            {
-            //                new YamlMappingNode((string)node);
-            //            }
-            //        );
-            //    );
-            //    using (TextWriter writer = File.CreateText(filename))
-            //    {
-            //        yaml.Save(writer, false);
-            //    }
-            //}
-        }
-
 
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
