@@ -35,10 +35,6 @@ namespace YAMLEditor
                 Directory.SetCurrentDirectory( Path.GetDirectoryName( dialog.FileName ) ?? "" );
 
                 mainTreeView.Nodes.Clear();
-                mainTreeView.Nodes.Add("new");
-                mainTreeView.Nodes[0].Nodes.Add("child");
-                mainTreeView.Nodes[0].Nodes[0].Nodes.Add("child child");
-                mainTreeView.Nodes.Add("parent 2");
                 var root = mainTreeView.Nodes.Add( Path.GetFileName( dialog.FileName ) );
                 root.ImageIndex = root.SelectedImageIndex = 3;
                 LoadFile( root, dialog.FileName );
@@ -156,6 +152,26 @@ namespace YAMLEditor
         private void OnAfterSelect( object sender, TreeViewEventArgs e )
         {
             mainPropertyGrid.SelectedObject = e.Node.Tag;
+
+            int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
+
+            var value = e.Node.Text.Substring(spaceIndex);
+
+            OldValueTextB.Text = value;
+
+            if (spaceIndex > 0)
+            {
+                newTypeB.Visible = true;
+
+                var type = e.Node.Text.Substring(0, spaceIndex - 2);
+
+                newTypeB.Text = type;
+            }
+            else
+            {
+                newTypeB.Visible = false;
+            }
+
         }
 
         private void OnDoubleClick( object sender, EventArgs e )
@@ -174,8 +190,10 @@ namespace YAMLEditor
             }
         }
 
-        private void saveToolStripButton_Click(object sender, EventArgs e)
+        private void onSave(object sender, EventArgs e)
         {
+
+
 
             var dialog = new SaveFileDialog()
                 { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
@@ -193,7 +211,7 @@ namespace YAMLEditor
 
         private void mainPropertyGrid_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
@@ -229,6 +247,35 @@ namespace YAMLEditor
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void mainPropertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
+        {
+           
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TreeNode node = mainTreeView.SelectedNode;
+
+            node.Text = newTypeB.Text + ": " + newValueTextB.Text;
+
+            //update old textbox
+            int spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
+
+            var value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
+
+            OldValueTextB.Text = value;
+
+            if (spaceIndex > 0)
+            {
+                var type = mainTreeView.SelectedNode.Text.Substring(0, spaceIndex - 2);
+
+                newTypeB.Text = type;
+            }
+            else
+                newTypeB.Text = "";
         }
     }
 }
