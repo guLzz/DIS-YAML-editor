@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace YAMLEditor
 {
@@ -6,9 +7,9 @@ namespace YAMLEditor
     {
         private string _nodevalue;
         private int _nodeindex;
-        private Node _node;
+        private TreeView _node;
 
-        public NodeCommand(Node node, string nodevalue, int nodeindex)
+        public NodeCommand(TreeView node, string nodevalue, int nodeindex)
         {
             this._node = node;
             this._nodevalue = nodevalue;
