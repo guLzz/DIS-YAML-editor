@@ -28,12 +28,12 @@ namespace YAMLEditor
 
         public override void Execute()
         {
-            _node.Action(_nodevalue, _nodeindex);
+            //_node.Action(_nodevalue, _nodeindex);
         }
 
         public override void UnExecute()
         {
-            _node.Action(Undo(_nodevalue), _nodeindex);
+            //_node.Action(Undo(_nodevalue), _nodeindex);
         }
 
         private string Undo(string nodevalue)
