@@ -259,6 +259,7 @@ namespace YAMLEditor
                     bool containSymbol = false;
                     bool containsSpace = false;
                     bool containsSlash = false;
+                    bool isIf = false;
 
                     var regexItem = new Regex("^[a-zA-Z0-9 ].*$");
 
@@ -281,17 +282,17 @@ namespace YAMLEditor
 
                     if (aux != -1)
                         containsSlash = true;
-
-                    var firstChars = "";
-
-                    if (nodeValue.Length > 1)
+                    
+                    if (nodeValue.IndexOf(" if ") != -1 || nodeValue.IndexOf(" elif ") != -1 || nodeValue.IndexOf(" else ") != -1 
+                        || nodeValue.IndexOf(" endif ") != -1 )
                     {
-                        firstChars = nodeValue.Substring(0, 2);
+                        isIf = true;
                     }
 
-                    if (firstChars == "{%")
+                    if (isIf)
                     {
-                        code += nodeKey + ": >- \n" + nodeValue;
+                        code += nodeKey + ": >-\n";
+                        code += nodeToCodeIf(nodeValue,tabsRequired);
 
                     }
                     else if(nodeKey == "alias" || nodeKey == "at" || nodeKey == "api_key" || nodeKey == "target" || nodeKey == "message"
@@ -319,6 +320,7 @@ namespace YAMLEditor
                     bool containSymbol = false;
                     bool containsSpace = false;
                     bool containsSlash = false;
+                    bool isIf = false;
 
                     var regexItem = new Regex("^[a-zA-Z0-9 ].*$");
                     
@@ -340,17 +342,17 @@ namespace YAMLEditor
 
                     if (aux != -1)
                         containsSlash = true;
-
-                    var firstChars = "";
-
-                    if (nodeValue.Length > 1)
+                    
+                    if (nodeValue.IndexOf(" if ") != -1 || nodeValue.IndexOf(" elif ") != -1 || nodeValue.IndexOf(" else ") != -1
+                        || nodeValue.IndexOf(" endif ") != -1)
                     {
-                        firstChars = nodeValue.Substring(0, 2);
+                        isIf = true;
                     }
 
-                    if (firstChars == "{%")
+                    if (isIf)
                     {
-                        code += nodeKey + ": >- \n" + nodeValue;
+                        code += nodeKey + ": >-\n";
+                        code += nodeToCodeIf(nodeValue,tabsRequired);
 
                     }
                     else if (nodeKey == "alias" || nodeKey == "at" || nodeKey == "api_key" || nodeKey == "target" || nodeKey == "message"
@@ -397,6 +399,75 @@ namespace YAMLEditor
                 {
                     code += nodeToCode(node.Nodes[i], tabsRequired + 1, false);
                 }
+            }
+
+            return code;
+        }
+
+        private string nodeToCodeIf(string nodeValue, int tabsRequired)
+        {
+            var code = "";
+            var tab  = "  ";
+            bool isStatement = false;
+
+            int beginOfLine = 0;
+            int endOfLine = 0;
+            var newvalue = "";
+            var line = "";
+
+            if (nodeValue.IndexOf("{%") <= nodeValue.IndexOf("{{") || nodeValue.IndexOf("{{") == -1)
+            {
+                isStatement = true;
+            }
+            
+            if(isStatement)
+            {
+                beginOfLine = nodeValue.IndexOf("{%");
+                endOfLine = nodeValue.IndexOf("%}");
+                
+                line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
+
+                if(nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
+                {
+                    newvalue = nodeValue.Substring(endOfLine + 3);
+                }
+
+                for (int t = 0; t < tabsRequired + 2; t++)
+                {
+                    code += tab;
+                }
+
+                code += line + "\n";
+
+                if (newvalue.Length > 0)
+                {
+                    code += nodeToCodeIf(newvalue, tabsRequired);
+                }
+            }
+            else
+            {
+                beginOfLine = nodeValue.IndexOf("{{");
+                endOfLine = nodeValue.IndexOf("}}");
+
+                line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
+
+                if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
+                {
+                    newvalue = nodeValue.Substring(endOfLine + 3);
+                }
+
+                for (int t = 0; t < tabsRequired + 4; t++)
+                {
+                    code += tab;
+                }
+
+                code += line + "\n";
+
+                if (newvalue.Length > 0)
+                {
+                    code += nodeToCodeIf(newvalue, tabsRequired);
+                }
+
             }
 
             return code;
