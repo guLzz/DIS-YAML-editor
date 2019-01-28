@@ -404,6 +404,74 @@ namespace YAMLEditor
             return code;
         }
 
+        private string nodeToCodeIf(string nodeValue, int tabsRequired)
+        {
+            var code = "";
+            var tab = "  ";
+            bool isStatement = false;
+
+            int beginOfLine = 0;
+            int endOfLine = 0;
+            var newvalue = "";
+            var line = "";
+
+            if (nodeValue.IndexOf("{%") <= nodeValue.IndexOf("{{") || nodeValue.IndexOf("{{") == -1)
+            {
+                isStatement = true;
+            }
+
+            if (isStatement)
+            {
+                beginOfLine = nodeValue.IndexOf("{%");
+                endOfLine = nodeValue.IndexOf("%}");
+
+                line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
+
+                if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
+                {
+                    newvalue = nodeValue.Substring(endOfLine + 3);
+                }
+
+                for (int t = 0; t < tabsRequired + 2; t++)
+                {
+                    code += tab;
+                }
+
+                code += line + "\n";
+
+                if (newvalue.Length > 0)
+                {
+                    code += nodeToCodeIf(newvalue, tabsRequired);
+                }
+            }
+            else
+            {
+                beginOfLine = nodeValue.IndexOf("{{");
+                endOfLine = nodeValue.IndexOf("}}");
+
+                line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
+
+                if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
+                {
+                    newvalue = nodeValue.Substring(endOfLine + 3);
+                }
+
+                for (int t = 0; t < tabsRequired + 4; t++)
+                {
+                    code += tab;
+                }
+
+                code += line + "\n";
+
+                if (newvalue.Length > 0)
+                {
+                    code += nodeToCodeIf(newvalue, tabsRequired);
+                }
+
+            }
+
+            return code;
+        }
         //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
