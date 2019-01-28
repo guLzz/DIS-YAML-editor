@@ -402,10 +402,23 @@ namespace YAMLEditor
             return code;
         }
 
+        //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
             var fileText = convertTreeViewtoCode();
+            var fileName = mainTreeView.TopNode.Text;
+            var path = Environment.CurrentDirectory + @"\" + fileName;
+            using (Stream s = File.Open(fileName, FileMode.Create ))
+            using (StreamWriter sw = new StreamWriter(s))
+            {
+                sw.Write(fileText);
+            }
+        }
 
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fileText = convertTreeViewtoCode();
             var dialog = new SaveFileDialog()
                 { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
 
@@ -417,7 +430,6 @@ namespace YAMLEditor
                     sw.Write(fileText);
                 }
             }
-
         }
 
         private void newToolStripButton_Click(object sender, EventArgs e)
@@ -431,6 +443,22 @@ namespace YAMLEditor
         private void doWizard()
         {
             
+        }
+
+        //autosave, falta parte em que chama a funcao cada vez que acontece algo novo
+        private void copyToolStripButton_Click(object sender, EventArgs e)
+        {
+            var fileText = convertTreeViewtoCode();
+            var path = Environment.CurrentDirectory + @"\recover.yaml";
+
+            using (Stream s = File.Open(path, FileMode.OpenOrCreate))
+            {
+                using (StreamWriter sw = new StreamWriter(s))
+                {
+                    File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
+                    sw.Write(fileText);
+                }
+            }
         }
 
         private void mainPropertyGrid_Click(object sender, EventArgs e)
@@ -462,7 +490,7 @@ namespace YAMLEditor
 
         }
 
-        private void copyToolStripButton_Click(object sender, EventArgs e)
+        private void copyToolStripButton_Click1(object sender, EventArgs e)
         {
             MessageBox.Show("copy");
 
@@ -513,5 +541,12 @@ namespace YAMLEditor
         {
             mainTreeView.SelectedNode.Nodes.Add("type: value");
         }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }
