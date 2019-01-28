@@ -5,20 +5,13 @@ namespace YAMLEditor
 {
     public class NodeCommand : Command
     {
-        private string _nodevalue;
         private int _nodeindex;
         private TreeView _node;
 
-        public NodeCommand(TreeView node, string nodevalue, int nodeindex)
+        public NodeCommand(TreeView node, int nodeindex)
         {
             this._node = node;
-            this._nodevalue = nodevalue;
             this._nodeindex = nodeindex;
-        }
-
-        public string NodeValue
-        {
-            set { _nodevalue = value; }
         }
 
         public int NodeIndex

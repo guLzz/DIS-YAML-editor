@@ -14,6 +14,5 @@ namespace YAMLEditor
                 case "child": _curr -= _nodeindex; break;
             }
         }
-        
     }
 }
