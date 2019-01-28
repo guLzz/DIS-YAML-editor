@@ -5,20 +5,14 @@ namespace YAMLEditor
 {
     public class NodeCommand : Command
     {
-        private string _nodevalue;
         private int _nodeindex;
         private TreeView _node;
+        private string type;
 
-        public NodeCommand(TreeView node, string nodevalue, int nodeindex)
+        public NodeCommand(TreeView node, int nodeindex)
         {
             this._node = node;
-            this._nodevalue = nodevalue;
             this._nodeindex = nodeindex;
-        }
-
-        public string NodeValue
-        {
-            set { _nodevalue = value; }
         }
 
         public int NodeIndex
@@ -28,21 +22,21 @@ namespace YAMLEditor
 
         public override void Execute()
         {
-            //_node.Action(_nodevalue, _nodeindex);
+            //_node.Action(_nodevalue, type);
         }
 
         public override void UnExecute()
         {
-            //_node.Action(Undo(_nodevalue), _nodeindex);
+            //_node.Action(Undo(_nodevalue), type);
         }
 
-        private string Undo(string nodevalue)
+        private string Undo(string type)
         {
-            switch (@nodevalue)
-
+            switch (type)
             {
-                case "child": return "parent";
-                case "parent": return "child";
+                case "remove": return "add";
+                case "add": return "remove";
+                case "edit": return "edit";
                 default:
                     throw new ArgumentException("@nodevalue");
             }
