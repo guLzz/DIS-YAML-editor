@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -6,34 +7,53 @@ namespace YAMLEditor
 {
     public class Node
     {
-        private int _curr = 0;
-        private string type;
-        protected List<List<string>> nodeList = new List<List<string>>();
-
-        public void Action(TreeNode node, string type)
+        public void Include(TreeView tview ,List<List<string>> info, TreeNode tnode)
         {
-            if (node.GetNodeCount(false) > 0)
-            {
-                addNodeList(node);
-            }
-            switch (type)
-            {
-                case "remove":
+            var nOfMenber = info.Count;
 
-                    break;
-                case "add":
+            TreeNode root = tview.TopNode;
 
-                    break;
-                case "edit":
+            var parent = searchParent(info[0], root);
 
-                    break;
-                    
-            }
+            int index = Int32.Parse(info[0][2]);
+
+            //parent[0].Nodes.Insert(0, tnode);
+            parent.Nodes.Insert(index, tnode);
         }
 
-        private void addNodeList(TreeNode node)
+        private TreeNode searchParent(List<string> nodeInfo, TreeNode node)
         {
-            nodeList.Add(new List<string> { node.Text, node.Parent.Text, node.Index.ToString() });
+            TreeNode parent = new TreeNode("empty");
+
+            if (node.Text == nodeInfo[1] && node.Index == Int32.Parse(nodeInfo[3]))
+            {
+                parent = node;
+            }
+            else
+            {
+                int nChilds = node.GetNodeCount(false);
+
+                if (nChilds> 0)
+                {
+                    for (int c = 0; c < nChilds; c++)
+                    {
+                        parent = searchParent(nodeInfo, node.Nodes[c]);
+                        
+                    }
+                }
+            }
+
+            return parent;
+        }
+
+        public void Exclude(TreeNode tnode, List<List<string>> info)
+        {
+            tnode.Remove();
+        }
+
+        public void Edit(TreeNode tnode, List<List<string>> info)
+        {
+            tnode.Text = info[0][0];
         }
     }
 }

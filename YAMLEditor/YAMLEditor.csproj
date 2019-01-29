@@ -49,10 +49,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddNode.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="EditNode.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="NodeCommand.cs" />
+    <Compile Include="CommandManager.cs" />
+    <Compile Include="NodeInfo.cs" />
     <Compile Include="Observer.cs" />
+    <Compile Include="RemoveNode.cs" />
     <Compile Include="YAMLEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

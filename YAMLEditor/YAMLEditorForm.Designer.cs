@@ -134,7 +134,7 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(192, 34);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -164,7 +164,7 @@
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(192, 34);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -274,13 +274,13 @@
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
@@ -339,7 +339,7 @@
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainSplitContainer.Location = new System.Drawing.Point(0, 71);
-            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.mainSplitContainer.Name = "mainSplitContainer";
             // 
             // mainSplitContainer.Panel1
@@ -350,7 +350,7 @@
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.mainTabControl);
             this.mainSplitContainer.Size = new System.Drawing.Size(514, 221);
-            this.mainSplitContainer.SplitterDistance = 239;
+            this.mainSplitContainer.SplitterDistance = 238;
             this.mainSplitContainer.SplitterWidth = 2;
             this.mainSplitContainer.TabIndex = 3;
             // 
@@ -361,10 +361,10 @@
             this.mainTreeView.ImageIndex = 0;
             this.mainTreeView.ImageList = this.mainImageList;
             this.mainTreeView.Location = new System.Drawing.Point(0, 0);
-            this.mainTreeView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainTreeView.Margin = new System.Windows.Forms.Padding(2);
             this.mainTreeView.Name = "mainTreeView";
             this.mainTreeView.SelectedImageIndex = 0;
-            this.mainTreeView.Size = new System.Drawing.Size(239, 221);
+            this.mainTreeView.Size = new System.Drawing.Size(238, 221);
             this.mainTreeView.TabIndex = 0;
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnAfterSelect);
             this.mainTreeView.DoubleClick += new System.EventHandler(this.OnDoubleClick);
@@ -383,26 +383,26 @@
             // 
             // mainTabControl
             // 
-            this.mainTabControl.Controls.Add(this.tabPage1);
-            this.mainTabControl.Controls.Add(this.helpTabPage);
             this.mainTabControl.Controls.Add(this.tabPage2);
+            this.mainTabControl.Controls.Add(this.helpTabPage);
+            this.mainTabControl.Controls.Add(this.tabPage1);
             this.mainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTabControl.Location = new System.Drawing.Point(0, 0);
-            this.mainTabControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainTabControl.Margin = new System.Windows.Forms.Padding(2);
             this.mainTabControl.Name = "mainTabControl";
             this.mainTabControl.SelectedIndex = 0;
-            this.mainTabControl.Size = new System.Drawing.Size(273, 221);
+            this.mainTabControl.Size = new System.Drawing.Size(274, 221);
             this.mainTabControl.TabIndex = 1;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.mainPropertyGrid);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage1.Size = new System.Drawing.Size(265, 195);
-            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Size = new System.Drawing.Size(266, 195);
+            this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Properties";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
@@ -410,9 +410,9 @@
             // 
             this.mainPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPropertyGrid.Location = new System.Drawing.Point(2, 2);
-            this.mainPropertyGrid.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainPropertyGrid.Margin = new System.Windows.Forms.Padding(2);
             this.mainPropertyGrid.Name = "mainPropertyGrid";
-            this.mainPropertyGrid.Size = new System.Drawing.Size(261, 191);
+            this.mainPropertyGrid.Size = new System.Drawing.Size(262, 191);
             this.mainPropertyGrid.TabIndex = 0;
             this.mainPropertyGrid.SelectedGridItemChanged += new System.Windows.Forms.SelectedGridItemChangedEventHandler(this.mainPropertyGrid_SelectedGridItemChanged);
             this.mainPropertyGrid.Click += new System.EventHandler(this.mainPropertyGrid_Click);
@@ -421,10 +421,10 @@
             // 
             this.helpTabPage.Controls.Add(this.mainWebBrowser);
             this.helpTabPage.Location = new System.Drawing.Point(4, 22);
-            this.helpTabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.helpTabPage.Margin = new System.Windows.Forms.Padding(2);
             this.helpTabPage.Name = "helpTabPage";
-            this.helpTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.helpTabPage.Size = new System.Drawing.Size(336, 247);
+            this.helpTabPage.Padding = new System.Windows.Forms.Padding(2);
+            this.helpTabPage.Size = new System.Drawing.Size(266, 195);
             this.helpTabPage.TabIndex = 1;
             this.helpTabPage.Text = "Help";
             this.helpTabPage.UseVisualStyleBackColor = true;
@@ -433,10 +433,10 @@
             // 
             this.mainWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainWebBrowser.Location = new System.Drawing.Point(2, 2);
-            this.mainWebBrowser.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainWebBrowser.Margin = new System.Windows.Forms.Padding(2);
             this.mainWebBrowser.MinimumSize = new System.Drawing.Size(11, 11);
             this.mainWebBrowser.Name = "mainWebBrowser";
-            this.mainWebBrowser.Size = new System.Drawing.Size(332, 243);
+            this.mainWebBrowser.Size = new System.Drawing.Size(262, 191);
             this.mainWebBrowser.TabIndex = 0;
             // 
             // tabPage2
@@ -447,10 +447,10 @@
             this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(336, 247);
-            this.tabPage2.TabIndex = 2;
-            this.tabPage2.Text = "Test";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(266, 195);
+            this.tabPage2.TabIndex = 0;
+            this.tabPage2.Text = "Edit";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // newTypeB
@@ -639,7 +639,7 @@
             this.Controls.Add(this.mainMenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "YAMLEditorForm";
             this.Text = "YAML Editor";
             this.mainMenuStrip.ResumeLayout(false);

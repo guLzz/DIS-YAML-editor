@@ -18,6 +18,8 @@ namespace YAMLEditor
 {
     public partial class YAMLEditorForm : Form
     {
+        private CommandManager cManager = new CommandManager();
+
         public YAMLEditorForm()
         {
             InitializeComponent();
@@ -472,6 +474,7 @@ namespace YAMLEditor
 
             return code;
         }
+        
         //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
@@ -515,8 +518,8 @@ namespace YAMLEditor
             
         }
 
-        //autosave, falta parte em que chama a funcao cada vez que acontece algo novo
-        private void copyToolStripButton_Click(object sender, EventArgs e)
+        //autosave
+        private void autoSave()
         {
             var fileText = convertTreeViewtoCode();
             var path = Environment.CurrentDirectory + @"\recover.yaml";
@@ -534,48 +537,56 @@ namespace YAMLEditor
         private void mainPropertyGrid_Click(object sender, EventArgs e)
         {
             MessageBox.Show("main click");
+            autoSave();
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("edit");
+            autoSave();
 
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("undo");
+            //MessageBox.Show("undo");
+            cManager.Undo();
+
+            //autoSave();
 
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("redo");
+            //MessageBox.Show("redo");
+            cManager.Redo();
+
+           // autoSave();
 
         }
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("cut");
-
+            autoSave();
         }
 
-        private void copyToolStripButton_Click1(object sender, EventArgs e)
+        private void copyToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("copy");
-
+            autoSave();
         }
 
         private void pasteToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("paste");
-
+            autoSave();
         }
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("halp");
-
+            autoSave();
         }
 
         private void mainPropertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
@@ -588,6 +599,7 @@ namespace YAMLEditor
         {
             TreeNode node = mainTreeView.SelectedNode;
 
+            cManager.addCommand(node, "edit", mainTreeView);
             node.Text = newTypeB.Text + ": " + newValueTextB.Text;
 
             //update old textbox
@@ -605,11 +617,19 @@ namespace YAMLEditor
             }
             else
                 newTypeB.Text = "";
+
+            
         }
 
         private void newNode_Click(object sender, EventArgs e)
         {
-            mainTreeView.SelectedNode.Nodes.Add("type: value");
+            TreeNode node = mainTreeView.SelectedNode;
+            node.Nodes.Add("type: value");
+
+            int nChilds = node.GetNodeCount(false);
+
+            cManager.addCommand(node.Nodes[nChilds-1],"add",mainTreeView);
+            //autoSave();
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
