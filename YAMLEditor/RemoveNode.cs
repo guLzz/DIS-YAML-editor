@@ -31,7 +31,7 @@ namespace YAMLEditor
 
         private void Undo(List<List<string>> info)
         {
-            //nodefunc.Include(_tview, _info);
+            nodefunc.Include(_tview, _info, _tnode);
         }
     }
 }

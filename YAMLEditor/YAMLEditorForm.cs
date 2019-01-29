@@ -567,8 +567,14 @@ namespace YAMLEditor
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("cut");
-            autoSave();
+            TreeNode node = mainTreeView.SelectedNode;
+
+            var aux = node;
+
+            cManager.addCommand(aux, "remove", mainTreeView);
+           
+            node.Remove();
+            //autoSave();
         }
 
         private void copyToolStripButton_Click(object sender, EventArgs e)

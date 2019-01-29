@@ -16,8 +16,7 @@ namespace YAMLEditor
             var parent = searchParent(info[0], root);
 
             int index = Int32.Parse(info[0][2]);
-
-            //parent[0].Nodes.Insert(0, tnode);
+            
             parent.Nodes.Insert(index, tnode);
         }
 

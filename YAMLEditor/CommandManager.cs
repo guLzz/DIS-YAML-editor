@@ -15,7 +15,7 @@ namespace YAMLEditor
             {
                 case "remove":
                     _current++;
-                    if (commandList.Count > 0 && commandList.Count != _current)
+                    if (commandList.Count > 0 && commandList.Count != _current && commandList.Count != 0)
                     {
                         commandList.RemoveRange(_current, (commandList.Count - _current + 1));
                     }
@@ -23,7 +23,7 @@ namespace YAMLEditor
                     break;
                 case "add":
                     _current++;
-                    if (commandList.Count > 0 && commandList.Count != _current)
+                    if (commandList.Count > 0 && commandList.Count != _current && commandList.Count != 0)
                     {
                         commandList.RemoveRange(_current, (commandList.Count - _current + 1));
                     }
@@ -31,7 +31,7 @@ namespace YAMLEditor
                     break;
                 case "edit":
                     _current++;
-                    if (commandList.Count > 0 && commandList.Count != _current)
+                    if (commandList.Count > 0 && commandList.Count != _current && commandList.Count != 0)
                     {
                         commandList.RemoveRange(_current, (commandList.Count - _current + 1));
                     }
