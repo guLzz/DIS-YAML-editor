@@ -19,10 +19,14 @@ namespace YAMLEditor
     public partial class YAMLEditorForm : Form
     {
         private CommandManager cManager = new CommandManager();
+        private Subject subject;
+        private TreeObserver observer = new TreeObserver();
 
         public YAMLEditorForm()
         {
             InitializeComponent();
+            subject = new Subject(mainTreeView);
+            subject.Attach(observer);
         }
 
         private void OnExit( object sender, EventArgs e )
@@ -45,6 +49,8 @@ namespace YAMLEditor
                 LoadFile( root, dialog.FileName );
                 root.Expand();
             }
+
+            subject.Notify();
         }
 
         private void LoadFile( TreeNode node, string filename )
@@ -178,6 +184,7 @@ namespace YAMLEditor
 
         }
 
+        //descobrir de onde vem
         private void OnDoubleClick( object sender, EventArgs e )
         {
             if ( mainTreeView.SelectedNode == null ) return;
@@ -194,13 +201,16 @@ namespace YAMLEditor
             }
         }
 
+        //--------------------- Convert Code------------------------------- Talvez passar para uma classe nova "Builder?"
+
+        //missing check if exists
         private string convertTreeViewtoCode()
         {
             var code = "";
 
             var root = mainTreeView.TopNode;
 
-            var rootNodeCount = root.GetNodeCount(false); //missing check if exists
+            var rootNodeCount = root.GetNodeCount(false); 
 
             if(rootNodeCount > 0)
             {
@@ -475,6 +485,8 @@ namespace YAMLEditor
             return code;
         }
         
+        //-----------------------------------------------------------------
+
         //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
@@ -518,7 +530,7 @@ namespace YAMLEditor
             
         }
 
-        //autosave
+        //autosave       PASSAR PARA O OBSERVER.UPDATE 
         private void autoSave()
         {
             var fileText = convertTreeViewtoCode();
@@ -551,7 +563,7 @@ namespace YAMLEditor
         {
             //MessageBox.Show("undo");
             cManager.Undo();
-
+            subject.Notify();
             //autoSave();
 
         }
@@ -560,20 +572,23 @@ namespace YAMLEditor
         {
             //MessageBox.Show("redo");
             cManager.Redo();
-
-           // autoSave();
+            subject.Notify();
+            // autoSave();
 
         }
 
+
+        //remove node -> arranjar butao 
         private void cutToolStripButton_Click(object sender, EventArgs e)
         {
             TreeNode node = mainTreeView.SelectedNode;
 
             var aux = node;
 
-            cManager.addCommand(aux, "remove", mainTreeView);
+            cManager.addCommand(aux, "remove");
            
             node.Remove();
+            subject.Notify();
             //autoSave();
         }
 
@@ -601,11 +616,12 @@ namespace YAMLEditor
             
         }
 
+        //Edit node
         private void button1_Click(object sender, EventArgs e)
         {
             TreeNode node = mainTreeView.SelectedNode;
 
-            cManager.addCommand(node, "edit", mainTreeView);
+            cManager.addCommand(node, "edit");
             node.Text = newTypeB.Text + ": " + newValueTextB.Text;
 
             //update old textbox
@@ -624,7 +640,9 @@ namespace YAMLEditor
             else
                 newTypeB.Text = "";
 
-            
+
+            subject.Notify();
+
         }
 
         private void newNode_Click(object sender, EventArgs e)
@@ -634,7 +652,8 @@ namespace YAMLEditor
 
             int nChilds = node.GetNodeCount(false);
 
-            cManager.addCommand(node.Nodes[nChilds-1],"add",mainTreeView);
+            cManager.addCommand(node.Nodes[nChilds-1],"add");
+            subject.Notify();
             //autoSave();
         }
 

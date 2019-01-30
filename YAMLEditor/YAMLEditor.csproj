@@ -49,14 +49,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddNode.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="EditNode.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="CommandManager.cs" />
+    <Compile Include="Design Patterns\Command\AddNode.cs" />
+    <Compile Include="Design Patterns\Command\Command.cs" />
+    <Compile Include="Design Patterns\Command\EditNode.cs" />
+    <Compile Include="Design Patterns\Command\Node.cs" />
+    <Compile Include="Design Patterns\Command\CommandManager.cs" />
     <Compile Include="NodeInfo.cs" />
-    <Compile Include="Observer.cs" />
-    <Compile Include="RemoveNode.cs" />
+    <Compile Include="Design Patterns\Observer\AbstractObserver.cs" />
+    <Compile Include="Design Patterns\Observer\AbstractSubject.cs" />
+    <Compile Include="Design Patterns\Observer\TreeObserver.cs" />
+    <Compile Include="Design Patterns\Command\RemoveNode.cs" />
+    <Compile Include="Design Patterns\Observer\Subject.cs" />
     <Compile Include="YAMLEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

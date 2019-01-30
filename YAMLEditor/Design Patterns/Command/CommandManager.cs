@@ -9,31 +9,31 @@ namespace YAMLEditor
         protected List<Command> commandList = new List<Command>();
         private int _current = -1;
 
-        public void addCommand(TreeNode tnode ,string type, TreeView tview)
+        public void addCommand(TreeNode tnode ,string type)
         {
             switch (type)
             {
                 case "remove":
                     _current++;
-                    if (commandList.Count > 0 && commandList.Count != _current && commandList.Count != 0)
+                    if (commandList.Count > 0)
                     {
-                        commandList.RemoveRange(_current, (commandList.Count - _current + 1));
+                        commandList.RemoveRange(_current, (commandList.Count - _current));
                     }
-                    commandList.Add(new RemoveNode(tnode,tview));
+                    commandList.Add(new RemoveNode(tnode));
                     break;
                 case "add":
                     _current++;
-                    if (commandList.Count > 0 && commandList.Count != _current && commandList.Count != 0)
+                    if (commandList.Count > 0)
                     {
-                        commandList.RemoveRange(_current, (commandList.Count - _current + 1));
+                        commandList.RemoveRange(_current, (commandList.Count - _current));
                     }
-                    commandList.Add(new AddNode(tnode,tview));
+                    commandList.Add(new AddNode(tnode));
                     break;
                 case "edit":
                     _current++;
-                    if (commandList.Count > 0 && commandList.Count != _current && commandList.Count != 0)
+                    if (commandList.Count > 0)
                     {
-                        commandList.RemoveRange(_current, (commandList.Count - _current + 1));
+                        commandList.RemoveRange(_current, (commandList.Count - _current));
                     }
                     commandList.Add(new EditNode(tnode));
                     break;

@@ -6,32 +6,32 @@ namespace YAMLEditor
     public class RemoveNode : Command
     {
         protected TreeNode _tnode;
-        protected TreeView _tview;
-        protected List<List<string>> _info;
+        protected TreeNode _parentNode;
+        protected int _index;
         protected Node nodefunc = new Node();
 
-        public RemoveNode(TreeNode tnode, TreeView tview)
+        public RemoveNode(TreeNode tnode)
         {
             this._tnode = tnode;
-            this._tview = tview;
             NodeInfo nodeInfo = new NodeInfo(tnode);
-            this._info = nodeInfo.GetInfo();
+            this._parentNode = tnode.Parent;
+            this._index = tnode.Index;
 
         }
 
         public override void Execute()
         {
-            nodefunc.Exclude(_tnode ,_info);
+            nodefunc.Exclude(_tnode);
         }
 
         public override void UnExecute()
         {
-            Undo(_info);
+            Undo();
         }
 
-        private void Undo(List<List<string>> info)
+        private void Undo()
         {
-            nodefunc.Include(_tview, _info, _tnode);
+            nodefunc.Include(_tnode, _parentNode, _index);
         }
     }
 }
