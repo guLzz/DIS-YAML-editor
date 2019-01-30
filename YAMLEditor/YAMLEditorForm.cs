@@ -187,25 +187,163 @@ namespace YAMLEditor
 
         private void OnAfterSelect( object sender, TreeViewEventArgs e )
         {
-            int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
+            var imageIndex = mainTreeView.SelectedNode.ImageIndex;
 
-            var value = e.Node.Text.Substring(spaceIndex);
-
-            OldValueTextB.Text = value;
-
-            if (spaceIndex > 0)
+            if (e.Node == mainTreeView.TopNode)
             {
-                newTypeB.Visible = true;
-
-                var type = e.Node.Text.Substring(0, spaceIndex - 2);
-
-                newTypeB.Text = type;
+                // label não e possivel alterar devido a fazer parte de multiple option
+                OldValueTextB.Visible = false;
+                newValueTextB.Visible = false;
+                newTypeB.Visible = false;
+                button1.Visible = false;
+                label1.Visible = false;
+                label2.Visible = false;
+                label3.Visible = false;
+                label4.Visible = false;
+                listBox1.Visible = false;
             }
             else
             {
-                newTypeB.Visible = false;
-            }
+                if (imageIndex == 0)
+                {
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
 
+                    int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
+
+                    var value = e.Node.Text.Substring(spaceIndex);
+
+                    OldValueTextB.Text = value;
+
+                    newTypeB.Visible = true;
+
+                    var type = e.Node.Text.Substring(0, spaceIndex - 2);
+
+                    newTypeB.Text = type;
+
+                    if (e.Node.Parent.SelectedImageIndex == 3)   // multiple value
+                    {
+                        listBox1.SelectedIndex = 3;
+                    }
+                    else                                        // default
+                    {
+                        listBox1.SelectedIndex = 0;
+                    }
+
+                }
+                else if (imageIndex == 2)                        //Password
+                {
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+
+                    int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
+
+                    var value = e.Node.Text.Substring(spaceIndex);
+
+                    OldValueTextB.Text = value;
+
+                    newTypeB.Visible = false;
+
+                    newTypeB.Text = "";
+
+                    listBox1.SelectedIndex = 1;
+                }
+                else if (imageIndex == 3)                        //Multiple Option
+                {
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+
+                    var value = e.Node.Text.Substring(0, e.Node.Text.Length - 1);
+
+                    OldValueTextB.Text = value;
+
+                    newTypeB.Visible = false;
+
+                    newTypeB.Text = "";
+
+                    listBox1.SelectedIndex = 2;
+                }
+                else if (imageIndex == 4)                        //Option
+                {
+                    if (e.Node.Parent.SelectedImageIndex == 3 && e.Node.Parent != mainTreeView.TopNode)
+                    {
+                        // label não e possivel alterar devido a fazer parte de multiple option
+
+                        OldValueTextB.Visible = false;
+                        newValueTextB.Visible = false;
+                        newTypeB.Visible = false;
+                        button1.Visible = false;
+                        label1.Visible = false;
+                        label2.Visible = false;
+                        label3.Visible = false;
+                        label4.Visible = false;
+                        listBox1.Visible = false;
+
+
+                    }
+                    else
+                    {
+                        newValueTextB.Visible = true;
+                        OldValueTextB.Visible = true;
+                        button1.Visible = true;
+                        label1.Visible = true;
+                        label2.Visible = true;
+                        label3.Visible = true;
+                        label4.Visible = true;
+                        listBox1.Visible = true;
+
+                        var value = e.Node.Text.Substring(0, e.Node.Text.Length - 1);
+
+                        OldValueTextB.Text = value;
+
+                        newTypeB.Visible = false;
+
+                        newTypeB.Text = "";
+
+                        listBox1.SelectedIndex = 4;
+                    }
+
+                }
+                else if (imageIndex == 5)                        //Sensor
+                {
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+
+                    var value = e.Node.Text.Substring(0, e.Node.Text.Length - 1);
+
+                    OldValueTextB.Text = value;
+
+                    newTypeB.Visible = false;
+
+                    newTypeB.Text = "";
+
+                    listBox1.SelectedIndex = 5;
+                }
+            }
         }
 
         //descobrir de onde vem
@@ -225,292 +363,7 @@ namespace YAMLEditor
             }
         }
 
-        //--------------------- Convert Code------------------------------- Talvez passar para uma classe nova "Builder?"
-        /*
-        //missing check if exists
-        private string convertTreeViewtoCode()
-        {
-            var code = "";
-
-            var root = mainTreeView.TopNode;
-
-            var rootNodeCount = root.GetNodeCount(false); 
-
-            if(rootNodeCount > 0)
-            {
-               code = nodeToCodeRoot(root, rootNodeCount);
-            }
-            
-            return code;
-        }
-
-        private string nodeToCodeRoot(TreeNode node, int subNodes)
-        {
-            var code = "";
-            int tabsRequired = 0;               //tabs required for code building
-
-            for (int i = 0; i < subNodes; i++)
-            {
-                code += nodeToCode(node.Nodes[i], tabsRequired, false);
-            }
-
-            return code;
-        }
-
-        private string nodeToCode(TreeNode node, int tabsRequired, bool hasHyphen)
-        {
-            var code = "";
-
-            var tab = "  ";
-
-            var subNodeCount = node.GetNodeCount(false);
-
-            int spaceIndex = node.Text.IndexOf(" ");
-
-            for (int t = 0; t < tabsRequired; t++)
-            {
-                code += tab;
-            }
-
-            if (spaceIndex == -1)
-            {
-                if(hasHyphen)
-                {
-                    code += "- " + node.Text + ":\n";
-                }
-                else
-                {
-                    code += node.Text + ":\n";
-                }
-            }
-            else
-            {
-                if(hasHyphen)
-                {
-                    code += "- ";
-
-                    var nodeKey = node.Text.Substring(0, spaceIndex - 1);
-                    var nodeValue = node.Text.Substring(spaceIndex + 1);
-
-                    bool containSymbol = false;
-                    bool containsSpace = false;
-                    bool containsSlash = false;
-                    bool isIf = false;
-
-                    var regexItem = new Regex("^[a-zA-Z0-9 ].*$");
-
-                    if (regexItem.IsMatch(nodeValue))
-                    {
-                        containSymbol = false;
-                    }
-                    else
-                    {
-                        containSymbol = true;
-                    }
-
-
-                    int aux = nodeValue.IndexOf(" ");
-
-                    if (aux != -1)
-                        containsSpace = true;
-
-                    aux = nodeValue.IndexOf("/");
-
-                    if (aux != -1)
-                        containsSlash = true;
-                    
-                    if (nodeValue.IndexOf(" if ") != -1 || nodeValue.IndexOf(" elif ") != -1 || nodeValue.IndexOf(" else ") != -1 
-                        || nodeValue.IndexOf(" endif ") != -1 )
-                    {
-                        isIf = true;
-                    }
-
-                    if (isIf)
-                    {
-                        code += nodeKey + ": >-\n";
-                        code += nodeToCodeIf(nodeValue,tabsRequired);
-
-                    }
-                    else if(nodeKey == "alias" || nodeKey == "at" || nodeKey == "api_key" || nodeKey == "target" || nodeKey == "message"
-                            || nodeValue == "on" || nodeValue == "off" || nodeKey == "to" || nodeKey == "offset" || containSymbol 
-                            || containsSpace || containsSlash)
-                    {
-                        code += nodeKey + ": '" + nodeValue + "'\n";
-                    }
-                    else if(nodeKey == "password")
-                    {
-                        code += nodeKey + ": !secret " + nodeValue + "\n";
-                    }
-                    else
-                    {
-                        code += node.Text + "\n";
-                    }
-
-                    
-                }
-                else
-                {
-                    var nodeKey = node.Text.Substring(0, spaceIndex - 1);
-                    var nodeValue = node.Text.Substring(spaceIndex + 1);
-
-                    bool containSymbol = false;
-                    bool containsSpace = false;
-                    bool containsSlash = false;
-                    bool isIf = false;
-
-                    var regexItem = new Regex("^[a-zA-Z0-9 ].*$");
-                    
-                    if (regexItem.IsMatch(nodeValue))
-                    {
-                        containSymbol = false;
-                    }
-                    else
-                    {
-                        containSymbol = true;
-                    }
-
-                    int aux = nodeValue.IndexOf(" ");
-
-                    if (aux != -1)
-                        containsSpace = true;
-
-                    aux = nodeValue.IndexOf("/");
-
-                    if (aux != -1)
-                        containsSlash = true;
-                    
-                    if (nodeValue.IndexOf(" if ") != -1 || nodeValue.IndexOf(" elif ") != -1 || nodeValue.IndexOf(" else ") != -1
-                        || nodeValue.IndexOf(" endif ") != -1)
-                    {
-                        isIf = true;
-                    }
-
-                    if (isIf)
-                    {
-                        code += nodeKey + ": >-\n";
-                        code += nodeToCodeIf(nodeValue,tabsRequired);
-
-                    }
-                    else if (nodeKey == "alias" || nodeKey == "at" || nodeKey == "api_key" || nodeKey == "target" || nodeKey == "message"
-                            || nodeValue == "on" || nodeValue == "off" || nodeKey == "to" || nodeKey == "offset" || containSymbol
-                            || containsSpace || containsSlash)
-                    {
-                        code += nodeKey + ": '" + nodeValue + "'\n";
-                    }
-                    else if (nodeKey == "password")
-                    {
-                        code += nodeKey + ": !secret " + nodeValue + "\n";
-                    }
-                    else
-                    {
-                        code += node.Text + "\n";
-                    }
-                }
-            }
-            
-            if(node.SelectedImageIndex == 3)
-            {
-                for(int i = 0; i < subNodeCount; i++)
-                {
-                    var subSubNodeCount = node.Nodes[i].GetNodeCount(false);
-                    
-                    for(int j = 0; j < subSubNodeCount; j++)
-                    {
-                        if(j == 0)
-                        {
-                            code += nodeToCode(node.Nodes[i].Nodes[j], tabsRequired, true);
-                        }
-                        else
-                        {
-                            code += nodeToCode(node.Nodes[i].Nodes[j], tabsRequired + 1, false);
-                        }
-                    }
-                    if(tabsRequired ==0)
-                        code += "\n";
-                }
-            }
-            else
-            {
-                for (int i = 0; i < subNodeCount; i++)
-                {
-                    code += nodeToCode(node.Nodes[i], tabsRequired + 1, false);
-                }
-            }
-
-            return code;
-        }
-
-        private string nodeToCodeIf(string nodeValue, int tabsRequired)
-        {
-            var code = "";
-            var tab = "  ";
-            bool isStatement = false;
-
-            int beginOfLine = 0;
-            int endOfLine = 0;
-            var newvalue = "";
-            var line = "";
-
-            if (nodeValue.IndexOf("{%") <= nodeValue.IndexOf("{{") || nodeValue.IndexOf("{{") == -1)
-            {
-                isStatement = true;
-            }
-
-            if (isStatement)
-            {
-                beginOfLine = nodeValue.IndexOf("{%");
-                endOfLine = nodeValue.IndexOf("%}");
-
-                line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
-
-                if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
-                {
-                    newvalue = nodeValue.Substring(endOfLine + 3);
-                }
-
-                for (int t = 0; t < tabsRequired + 2; t++)
-                {
-                    code += tab;
-                }
-
-                code += line + "\n";
-
-                if (newvalue.Length > 0)
-                {
-                    code += nodeToCodeIf(newvalue, tabsRequired);
-                }
-            }
-            else
-            {
-                beginOfLine = nodeValue.IndexOf("{{");
-                endOfLine = nodeValue.IndexOf("}}");
-
-                line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
-
-                if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
-                {
-                    newvalue = nodeValue.Substring(endOfLine + 3);
-                }
-
-                for (int t = 0; t < tabsRequired + 4; t++)
-                {
-                    code += tab;
-                }
-
-                code += line + "\n";
-
-                if (newvalue.Length > 0)
-                {
-                    code += nodeToCodeIf(newvalue, tabsRequired);
-                }
-
-            }
-
-            return code;
-        }
-        */
-        //-----------------------------------------------------------------  
-
+       
         //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
@@ -559,12 +412,6 @@ namespace YAMLEditor
         private void mainPropertyGrid_Click(object sender, EventArgs e)
         {
             MessageBox.Show("main click");
-        }
-
-        private void editToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("edit");
-
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -699,11 +546,5 @@ namespace YAMLEditor
             subject.Notify();
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string type = listBox1.SelectedItem.ToString();
-
-
-        }
     }
 }
