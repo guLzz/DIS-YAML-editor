@@ -82,6 +82,10 @@
             this.newNode = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.label5 = new System.Windows.Forms.Label();
+            this.multipleOptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.conditionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.mainMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
@@ -447,6 +451,7 @@
             // 
             // helpTabPage
             // 
+            this.helpTabPage.Controls.Add(this.linkLabel1);
             this.helpTabPage.Controls.Add(this.mainWebBrowser);
             this.helpTabPage.Location = new System.Drawing.Point(4, 25);
             this.helpTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -594,6 +599,10 @@
             // newNode
             // 
             this.newNode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.newNode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.multipleOptionToolStripMenuItem,
+            this.conditionToolStripMenuItem,
+            this.optionToolStripMenuItem});
             this.newNode.Image = ((System.Drawing.Image)(resources.GetObject("newNode.Image")));
             this.newNode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newNode.Name = "newNode";
@@ -616,6 +625,39 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "key";
             this.label5.Visible = false;
+            // 
+            // multipleOptionToolStripMenuItem
+            // 
+            this.multipleOptionToolStripMenuItem.Name = "multipleOptionToolStripMenuItem";
+            this.multipleOptionToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.multipleOptionToolStripMenuItem.Text = "MultipleOption";
+            this.multipleOptionToolStripMenuItem.Click += new System.EventHandler(this.multipleOptionToolStripMenuItem_Click);
+            // 
+            // conditionToolStripMenuItem
+            // 
+            this.conditionToolStripMenuItem.Name = "conditionToolStripMenuItem";
+            this.conditionToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.conditionToolStripMenuItem.Text = "Condition";
+            this.conditionToolStripMenuItem.Click += new System.EventHandler(this.conditionToolStripMenuItem_Click);
+            // 
+            // optionToolStripMenuItem
+            // 
+            this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
+            this.optionToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.optionToolStripMenuItem.Text = "Option";
+            this.optionToolStripMenuItem.Click += new System.EventHandler(this.optionToolStripMenuItem_Click);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel1.Location = new System.Drawing.Point(103, 161);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(422, 39);
+            this.linkLabel1.TabIndex = 1;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Home Assistant CookBook";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // YAMLEditorForm
             // 
@@ -641,6 +683,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.helpTabPage.ResumeLayout(false);
+            this.helpTabPage.PerformLayout();
             this.mainToolStrip.ResumeLayout(false);
             this.mainToolStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -702,6 +745,10 @@
         private System.Windows.Forms.TabPage helpTabPage;
         private System.Windows.Forms.WebBrowser mainWebBrowser;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ToolStripMenuItem multipleOptionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem conditionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

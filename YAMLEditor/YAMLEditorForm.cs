@@ -410,7 +410,9 @@ namespace YAMLEditor
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
             mainTreeView.Nodes.Clear();
-            mainTreeView.Nodes.Add("type: value");
+            mainTreeView.Nodes.Add("new_file.yaml");
+            mainTreeView.Nodes[0].ImageIndex = 3;
+            mainTreeView.Nodes[0].SelectedImageIndex = 3;
         }
         
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -435,7 +437,7 @@ namespace YAMLEditor
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("We also need it!");
+            MessageBox.Show("Press Help Tab!");
             
         }
         
@@ -451,30 +453,35 @@ namespace YAMLEditor
                     node.Text = newTypeB.Text + ": " + newValueTextB.Text;
                     OldValueTextB.Text = node.Text;
                     newTypeB.Text = "";
+                    newValueTextB.Text = "";
                     break;
 
                 case 1:
                     node.Text = "password: " + newValueTextB.Text;
                     OldValueTextB.Text = node.Text;
                     newTypeB.Text = "";
+                    newValueTextB.Text = "";
                     break;
 
                 case 2:
                     node.Text = newValueTextB.Text;
                     OldValueTextB.Text = node.Text;
                     newTypeB.Text = "";
+                    newValueTextB.Text = "";
                     break;
 
                 case 3:
                     node.Text = newTypeB.Text + ": " + newValueTextB.Text;
                     OldValueTextB.Text = node.Text;
                     newTypeB.Text = "";
+                    newValueTextB.Text = "";
                     break;
 
                 case 4:
                     node.Text = newValueTextB.Text;
                     OldValueTextB.Text = node.Text;
                     newTypeB.Text = "";
+                    newValueTextB.Text = "";
                     break;
                     
                 default:
@@ -650,6 +657,71 @@ namespace YAMLEditor
                 default:
                     break;
             }
+        }
+
+        private void multipleOptionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mainTreeView.TopNode != null)
+            {
+                TreeNode node = mainTreeView.SelectedNode;
+                AbstractBuilder multipleOptionBuilder = new MultipleOptionBuilder();
+
+                director.Construct(multipleOptionBuilder);
+
+                var nodeToAdd = multipleOptionBuilder.GetResult();
+
+                node.Nodes.Add(nodeToAdd);
+
+                int nChilds = node.GetNodeCount(false);
+
+                cManager.addCommand(node.Nodes[nChilds - 1], "add");
+                subject.Notify();
+            }
+        }
+
+        private void conditionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mainTreeView.TopNode != null)
+            {
+                TreeNode node = mainTreeView.SelectedNode;
+                AbstractBuilder conditionBuilder = new ConditionBuilder();
+
+                director.Construct(conditionBuilder);
+
+                var nodeToAdd = conditionBuilder.GetResult();
+
+                node.Nodes.Add(nodeToAdd);
+
+                int nChilds = node.GetNodeCount(false);
+
+                cManager.addCommand(node.Nodes[nChilds - 1], "add");
+                subject.Notify();
+            }
+        }
+
+        private void optionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mainTreeView.TopNode != null)
+            {
+                TreeNode node = mainTreeView.SelectedNode;
+                AbstractBuilder optionBuilder = new OptionBuilder();
+
+                director.Construct(optionBuilder);
+
+                var nodeToAdd = optionBuilder.GetResult();
+
+                node.Nodes.Add(nodeToAdd);
+
+                int nChilds = node.GetNodeCount(false);
+
+                cManager.addCommand(node.Nodes[nChilds - 1], "add");
+                subject.Notify();
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.home-assistant.io/cookbook/");
         }
     }
 }

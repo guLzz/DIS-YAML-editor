@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Design Patterns\Builder\ConditionBuilder.cs" />
     <Compile Include="Design Patterns\Builder\AbstractBuilder.cs" />
     <Compile Include="Design Patterns\Command\AddNode.cs" />
     <Compile Include="Design Patterns\Command\Command.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="Design Patterns\Singleton\Singleton.cs" />
     <Compile Include="Design Patterns\Builder\SingleNodeBuilder.cs" />
     <Compile Include="Design Patterns\Builder\Director.cs" />
+    <Compile Include="Design Patterns\Builder\MultipleOptionBuilder.cs" />
+    <Compile Include="Design Patterns\Builder\OptionBuilder.cs" />
     <Compile Include="YAMLEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
