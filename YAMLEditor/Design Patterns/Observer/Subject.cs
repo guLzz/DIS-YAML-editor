@@ -5,13 +5,11 @@ namespace YAMLEditor
 {
     public class Subject : AbstractSubject
     {
-        private TreeView tview = new TreeView();
-
         private List<AbstractObserver> obsList = new List<AbstractObserver>();
 
-        public Subject(TreeView tview)
+        public Subject()
         {
-            this.tview = tview;
+            
         }
 
         public override void Attach(AbstractObserver observer)

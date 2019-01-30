@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -6,26 +7,26 @@ namespace YAMLEditor
 {
     public class TreeObserver : AbstractObserver
     {
+        Singleton nodeSingleton = Singleton.Instance();
+        private TreeView _tview = new TreeView();
 
-
-        public TreeObserver()
+        public TreeObserver(TreeView tview)
         {
-            // call new save class
+            this._tview = tview;
         }
 
         public override void Update(AbstractSubject subject)
         {
-            //autoSave();
+            autoSave();
             MessageBox.Show("Observer");
         }
 
-        //autosave       PASSAR PARA O OBSERVER.UPDATE 
         private void autoSave()
         {
-            var fileText = convertTreeViewtoCode();
+            var fileText = nodeSingleton.convertTreeViewtoCode(_tview);
             var path = Program.path + @"\recover.yaml";
 
-            using (Stream s = File.Open(path, FileMode.OpenOrCreate))
+            using (Stream s = File.Open(path, FileMode.Create))
             {
                 using (StreamWriter sw = new StreamWriter(s))
                 {

@@ -13,7 +13,6 @@ namespace YAMLEditor
         public RemoveNode(TreeNode tnode)
         {
             this._tnode = tnode;
-            NodeInfo nodeInfo = new NodeInfo(tnode);
             this._parentNode = tnode.Parent;
             this._index = tnode.Index;
 

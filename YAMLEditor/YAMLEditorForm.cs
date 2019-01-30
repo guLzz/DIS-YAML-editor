@@ -18,14 +18,15 @@ namespace YAMLEditor
 {
     public partial class YAMLEditorForm : Form
     {
+        Singleton nodeSingleton = Singleton.Instance();
         private CommandManager cManager = new CommandManager();
-        private Subject subject;
-        private TreeObserver observer = new TreeObserver();
+        private Subject subject = new Subject();
+        private TreeObserver observer;
 
         public YAMLEditorForm()
         {
             InitializeComponent();
-            subject = new Subject(mainTreeView);
+            observer = new TreeObserver(mainTreeView);
             subject.Attach(observer);
         }
 
@@ -202,7 +203,7 @@ namespace YAMLEditor
         }
 
         //--------------------- Convert Code------------------------------- Talvez passar para uma classe nova "Builder?"
-
+        /*
         //missing check if exists
         private string convertTreeViewtoCode()
         {
@@ -484,13 +485,13 @@ namespace YAMLEditor
 
             return code;
         }
-        
-        //-----------------------------------------------------------------
+        */
+        //-----------------------------------------------------------------  
 
         //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
-            var fileText = convertTreeViewtoCode();
+            var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
             var fileName = mainTreeView.TopNode.Text;
             var path = Environment.CurrentDirectory + @"\" + fileName;
             using (Stream s = File.Open(fileName, FileMode.Create ))
@@ -503,7 +504,7 @@ namespace YAMLEditor
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fileText = convertTreeViewtoCode();
+            var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
             var dialog = new SaveFileDialog()
                 { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
 
@@ -533,7 +534,7 @@ namespace YAMLEditor
         //autosave       PASSAR PARA O OBSERVER.UPDATE 
         private void copyToolStripButton_Click(object sender, EventArgs e)
         {
-            var fileText = convertTreeViewtoCode();
+            var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
             var path = Program.path + @"\recover.yaml";
 
             using (Stream s = File.Open(path, FileMode.OpenOrCreate))

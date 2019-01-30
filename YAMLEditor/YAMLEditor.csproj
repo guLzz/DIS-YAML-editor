@@ -54,12 +54,12 @@
     <Compile Include="Design Patterns\Command\EditNode.cs" />
     <Compile Include="Design Patterns\Command\Node.cs" />
     <Compile Include="Design Patterns\Command\CommandManager.cs" />
-    <Compile Include="NodeInfo.cs" />
     <Compile Include="Design Patterns\Observer\AbstractObserver.cs" />
     <Compile Include="Design Patterns\Observer\AbstractSubject.cs" />
     <Compile Include="Design Patterns\Observer\TreeObserver.cs" />
     <Compile Include="Design Patterns\Command\RemoveNode.cs" />
     <Compile Include="Design Patterns\Observer\Subject.cs" />
+    <Compile Include="Design Patterns\Singleton\Singleton.cs" />
     <Compile Include="YAMLEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

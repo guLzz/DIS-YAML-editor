@@ -12,7 +12,6 @@ namespace YAMLEditor
         public EditNode(TreeNode tnode)
         {
             this._tnode = tnode;
-            NodeInfo nodeInfo = new NodeInfo(tnode);
             this._text = tnode.Text;
 
         }
