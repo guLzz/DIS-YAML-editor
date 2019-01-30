@@ -531,22 +531,6 @@ namespace YAMLEditor
             
         }
 
-        //autosave       PASSAR PARA O OBSERVER.UPDATE 
-        private void copyToolStripButton_Click(object sender, EventArgs e)
-        {
-            var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
-            var path = Program.path + @"\recover.yaml";
-
-            using (Stream s = File.Open(path, FileMode.OpenOrCreate))
-            {
-                using (StreamWriter sw = new StreamWriter(s))
-                {
-                    File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
-                    sw.Write(fileText);
-                }
-            }
-        }
-
         private void mainPropertyGrid_Click(object sender, EventArgs e)
         {
             MessageBox.Show("main click");
@@ -576,22 +560,12 @@ namespace YAMLEditor
 
         }
 
-
-        //remove node -> arranjar butao 
         private void cutToolStripButton_Click(object sender, EventArgs e)
         {
-            TreeNode node = mainTreeView.SelectedNode;
-
-            var aux = node;
-
-            cManager.addCommand(aux, "remove");
-           
-            node.Remove();
-            subject.Notify();
-            
+                   
         }
 
-        private void copyToolStripButton_Click1(object sender, EventArgs e)
+        private void copyToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("copy");
             
@@ -646,14 +620,7 @@ namespace YAMLEditor
 
         private void newNode_Click(object sender, EventArgs e)
         {
-            TreeNode node = mainTreeView.SelectedNode;
-            node.Nodes.Add("type: value");
-
-            int nChilds = node.GetNodeCount(false);
-
-            cManager.addCommand(node.Nodes[nChilds-1],"add");
-            subject.Notify();
-            //autoSave();
+            
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -661,6 +628,38 @@ namespace YAMLEditor
 
         }
 
-        
+        private void RemoveNode(object sender, EventArgs e)
+        {
+            TreeNode node = mainTreeView.SelectedNode;
+
+            var aux = node;
+
+            cManager.addCommand(aux, "remove");
+
+            node.Remove();
+            subject.Notify();
+        }
+
+        private void newSameLvl(object sender, EventArgs e)
+        {
+            TreeNode node = mainTreeView.SelectedNode;
+            node.Parent.Nodes.Add("type: value");
+
+            int nChilds = node.Parent.GetNodeCount(false);
+
+            cManager.addCommand(node.Parent.Nodes[nChilds - 1], "add");
+            subject.Notify();
+        }
+
+        private void newChild(object sender, EventArgs e)
+        {
+            TreeNode node = mainTreeView.SelectedNode;
+            node.Nodes.Add("type: value");
+
+            int nChilds = node.GetNodeCount(false);
+
+            cManager.addCommand(node.Nodes[nChilds - 1], "add");
+            subject.Notify();
+        }
     }
 }

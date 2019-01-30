@@ -85,3 +85,5 @@ script:
       service: script.turn_on
       data:
         entity_id: script.flash_room1
+  type: value
+type: value

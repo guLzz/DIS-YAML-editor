@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing.Text;
+using System.Dynamic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -25,7 +26,7 @@ namespace YAMLEditor
         {
             var fileText = nodeSingleton.convertTreeViewtoCode(_tview);
             var path = Program.path + @"\recover.yaml";
-
+            File.Delete(path);
             using (Stream s = File.Open(path, FileMode.Create))
             {
                 using (StreamWriter sw = new StreamWriter(s))
