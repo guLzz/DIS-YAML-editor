@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace YAMLEditor
 {
@@ -13,8 +15,24 @@ namespace YAMLEditor
 
         public override void Update(AbstractSubject subject)
         {
-            // execute save
+            //autoSave();
             MessageBox.Show("Observer");
+        }
+
+        //autosave       PASSAR PARA O OBSERVER.UPDATE 
+        private void autoSave()
+        {
+            var fileText = convertTreeViewtoCode();
+            var path = Program.path + @"\recover.yaml";
+
+            using (Stream s = File.Open(path, FileMode.OpenOrCreate))
+            {
+                using (StreamWriter sw = new StreamWriter(s))
+                {
+                    File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
+                    sw.Write(fileText);
+                }
+            }
         }
     }
 }

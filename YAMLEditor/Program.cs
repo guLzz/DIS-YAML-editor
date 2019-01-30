@@ -8,12 +8,15 @@ namespace YAMLEditor
 {
     static class Program
     {
+        public static string path;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            path = Environment.CurrentDirectory +(@"..\..\..\..\Recover\");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
             Application.Run( new YAMLEditorForm() );

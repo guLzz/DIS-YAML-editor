@@ -531,10 +531,10 @@ namespace YAMLEditor
         }
 
         //autosave       PASSAR PARA O OBSERVER.UPDATE 
-        private void autoSave()
+        private void copyToolStripButton_Click(object sender, EventArgs e)
         {
             var fileText = convertTreeViewtoCode();
-            var path = Environment.CurrentDirectory + @"\recover.yaml";
+            var path = Program.path + @"\recover.yaml";
 
             using (Stream s = File.Open(path, FileMode.OpenOrCreate))
             {
@@ -549,13 +549,11 @@ namespace YAMLEditor
         private void mainPropertyGrid_Click(object sender, EventArgs e)
         {
             MessageBox.Show("main click");
-            autoSave();
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("edit");
-            autoSave();
 
         }
 
@@ -564,7 +562,7 @@ namespace YAMLEditor
             //MessageBox.Show("undo");
             cManager.Undo();
             subject.Notify();
-            //autoSave();
+
 
         }
 
@@ -573,7 +571,7 @@ namespace YAMLEditor
             //MessageBox.Show("redo");
             cManager.Redo();
             subject.Notify();
-            // autoSave();
+            
 
         }
 
@@ -589,25 +587,25 @@ namespace YAMLEditor
            
             node.Remove();
             subject.Notify();
-            //autoSave();
+            
         }
 
-        private void copyToolStripButton_Click(object sender, EventArgs e)
+        private void copyToolStripButton_Click1(object sender, EventArgs e)
         {
             MessageBox.Show("copy");
-            autoSave();
+            
         }
 
         private void pasteToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("paste");
-            autoSave();
+            
         }
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("halp");
-            autoSave();
+            
         }
 
         private void mainPropertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
