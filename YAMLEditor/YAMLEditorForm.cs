@@ -364,35 +364,50 @@ namespace YAMLEditor
         }
 
        
-        //secalhar usar isto para save as e redifenir um novo save para apenas substituir o ficheiro ja existente
         private void onSave(object sender, EventArgs e)
         {
-            var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
-            var fileName = mainTreeView.TopNode.Text;
-            var path = Environment.CurrentDirectory + @"\" + fileName;
-            using (Stream s = File.Open(fileName, FileMode.Create ))
-            using (StreamWriter sw = new StreamWriter(s))
+            if (mainTreeView.TopNode != null)
             {
-                sw.Write(fileText);
+                var fileName = mainTreeView.TopNode.Text;
+                var path = Environment.CurrentDirectory + @"\" + fileName;
+                if (File.Exists(path))
+                {
+                    var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
+                    using (Stream s = File.Open(fileName, FileMode.Create))
+                    using (StreamWriter sw = new StreamWriter(s))
+                    {
+                        sw.Write(fileText);
+                    }
+                    File.Delete(Program.path + "recover.yaml");
+                }
+                else
+                {
+                    saveAsToolStripMenuItem_Click(sender, e);
+                }
             }
-            File.Delete(Program.path + "recover.yaml");
+            
+            
         }
 
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
-            var dialog = new SaveFileDialog()
-                { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
-
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (mainTreeView.TopNode != null)
             {
-                using (Stream s = File.Open(dialog.FileName, FileMode.Create))
-                using (StreamWriter sw = new StreamWriter(s))
+                var fileText = nodeSingleton.convertTreeViewtoCode(mainTreeView);
+                var dialog = new SaveFileDialog()
+                    { Filter = @"Yaml files (*.yaml)|*.yaml|All files (*.*)|*.*", DefaultExt = "yaml", FileName = "HomeAssistantConf" };
+
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    sw.Write(fileText);
+                    using (Stream s = File.Open(dialog.FileName, FileMode.Create))
+                    using (StreamWriter sw = new StreamWriter(s))
+                    {
+                        sw.Write(fileText);
+                    }
+                    File.Delete(Program.path + "recover.yaml");
                 }
-                File.Delete(Program.path + "recover.yaml");
+
             }
         }
 
@@ -400,53 +415,28 @@ namespace YAMLEditor
         {
             mainTreeView.Nodes.Clear();
             mainTreeView.Nodes.Add("type: value");
-            doWizard();
 
         }
 
-        private void doWizard()
-        {
-            
-        }
-
-        private void mainPropertyGrid_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("main click");
-        }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("undo");
-            cManager.Undo();
-            subject.Notify();
-
+            if (mainTreeView.TopNode != null)
+            {
+                cManager.Undo();
+                subject.Notify();
+            }
 
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("redo");
-            cManager.Redo();
-            subject.Notify();
-            
+            if (mainTreeView.TopNode != null)
+            {
+                cManager.Redo();
+                subject.Notify();
+            }
 
-        }
-
-        private void cutToolStripButton_Click(object sender, EventArgs e)
-        {
-                   
-        }
-
-        private void copyToolStripButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("copy");
-            
-        }
-
-        private void pasteToolStripButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("paste");
-            
         }
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
@@ -455,11 +445,7 @@ namespace YAMLEditor
             
         }
 
-        private void mainPropertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
-        {
-           
-            
-        }
+
 
         //Edit node
         private void EditNode(object sender, EventArgs e)
@@ -495,55 +481,63 @@ namespace YAMLEditor
             
         }
 
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void RemoveNode(object sender, EventArgs e)
         {
-            TreeNode node = mainTreeView.SelectedNode;
+            if (mainTreeView.TopNode != null)
+            {
+                TreeNode node = mainTreeView.SelectedNode;
 
-            var aux = node;
+                var aux = node;
 
-            cManager.addCommand(aux, "remove");
+                cManager.addCommand(aux, "remove");
 
-            node.Remove();
-            subject.Notify();
+                node.Remove();
+                subject.Notify();
+            }
+            
         }
 
         private void newSameLvl(object sender, EventArgs e)
         {
-            TreeNode node = mainTreeView.SelectedNode;
-            AbstractBuilder singleNodeBuilder = new SingleNodeBuilder();
+            if (mainTreeView.TopNode != null)
+            {
+                TreeNode node = mainTreeView.SelectedNode;
+                AbstractBuilder singleNodeBuilder = new SingleNodeBuilder();
 
-            director.Construct(singleNodeBuilder);
+                director.Construct(singleNodeBuilder);
 
-            var nodeToAdd = singleNodeBuilder.GetResult();
+                var nodeToAdd = singleNodeBuilder.GetResult();
 
-            node.Parent.Nodes.Add(nodeToAdd);
+                node.Parent.Nodes.Add(nodeToAdd);
 
-            int nChilds = node.Parent.GetNodeCount(false);
+                int nChilds = node.Parent.GetNodeCount(false);
 
-            cManager.addCommand(node.Parent.Nodes[nChilds - 1], "add");
-            subject.Notify();
+                cManager.addCommand(node.Parent.Nodes[nChilds - 1], "add");
+                subject.Notify();
+            }
+           
         }
 
         private void newChild(object sender, EventArgs e)
         {
-            TreeNode node = mainTreeView.SelectedNode;
-            AbstractBuilder singleNodeBuilder = new SingleNodeBuilder();
+            if (mainTreeView.TopNode != null)
+            {
+                TreeNode node = mainTreeView.SelectedNode;
+                AbstractBuilder singleNodeBuilder = new SingleNodeBuilder();
 
-            director.Construct(singleNodeBuilder);
+                director.Construct(singleNodeBuilder);
 
-            var nodeToAdd = singleNodeBuilder.GetResult();
+                var nodeToAdd = singleNodeBuilder.GetResult();
 
-            node.Nodes.Add(nodeToAdd);
+                node.Nodes.Add(nodeToAdd);
 
-            int nChilds = node.GetNodeCount(false);
+                int nChilds = node.GetNodeCount(false);
 
-            cManager.addCommand(node.Nodes[nChilds - 1], "add");
-            subject.Notify();
+                cManager.addCommand(node.Nodes[nChilds - 1], "add");
+                subject.Notify();
+            }
+            
         }
 
     }
