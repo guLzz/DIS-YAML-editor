@@ -28,6 +28,28 @@ namespace YAMLEditor
             InitializeComponent();
             observer = new TreeObserver(mainTreeView);
             subject.Attach(observer);
+            if (Program.hasRecover)
+            {
+                //popup
+                DialogResult result = MessageBox.Show("Do you want to recover the last changes?", "Confirmation", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes)
+                {
+                    onRecover(Program.path);
+                    File.Delete(Program.path + "recover.yaml");
+                }
+            }
+        }
+
+        private void onRecover(String path)
+        {
+            System.Diagnostics.Trace.WriteLine($"Filename: {"recover.yaml"}");
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(path + "recover.yaml") ?? "");
+
+            mainTreeView.Nodes.Clear();
+            var root = mainTreeView.Nodes.Add(Path.GetFileName(path +"recover.yaml"));
+            root.ImageIndex = root.SelectedImageIndex = 3;
+            LoadFile(root, "recover.yaml");
+            root.Expand();
         }
 
         private void OnExit( object sender, EventArgs e )
@@ -499,6 +521,7 @@ namespace YAMLEditor
             {
                 sw.Write(fileText);
             }
+            File.Delete(Program.path + "recover.yaml");
         }
 
 
@@ -515,6 +538,7 @@ namespace YAMLEditor
                 {
                     sw.Write(fileText);
                 }
+                File.Delete(Program.path + "recover.yaml");
             }
         }
 

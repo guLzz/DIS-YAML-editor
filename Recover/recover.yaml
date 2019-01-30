@@ -53,7 +53,7 @@ script:
       service: notify.email
       data:
         message: 'Movement alarm in Room1'
-    - delay:
+    - delay: ''
       seconds: 60
     - alias: 'Alarm Room1 Stop'
       service: homeassistant.turn_off
@@ -66,7 +66,7 @@ script:
       service: homeassistant.turn_on
       data:
         entity_id: switch.REL1
-    - delay:
+    - delay: ''
       seconds: 1
     - alias: 'Light Room1 Off'
       service: homeassistant.turn_off
@@ -79,11 +79,10 @@ script:
   flash_loop:
     alias: 'Flash loop'
     sequence:
-    - delay:
+    - delay: ''
       seconds: 1
     - alias: 'loop_room1'
       service: script.turn_on
       data:
         entity_id: script.flash_room1
-  type: value
 type: value
