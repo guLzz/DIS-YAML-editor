@@ -8,7 +8,7 @@ namespace YAMLEditor
 {
     public class TreeObserver : AbstractObserver
     {
-        Singleton nodeSingleton = Singleton.Instance();
+        private Singleton nodeSingleton = Singleton.Instance();
         private TreeView _tview = new TreeView();
 
         public TreeObserver(TreeView tview)
@@ -19,7 +19,6 @@ namespace YAMLEditor
         public override void Update(AbstractSubject subject)
         {
             autoSave();
-            MessageBox.Show("Observer");
         }
 
         private void autoSave()

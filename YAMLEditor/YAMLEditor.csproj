@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Design Patterns\Builder\AbstractBuilder.cs" />
     <Compile Include="Design Patterns\Command\AddNode.cs" />
     <Compile Include="Design Patterns\Command\Command.cs" />
     <Compile Include="Design Patterns\Command\EditNode.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Design Patterns\Command\RemoveNode.cs" />
     <Compile Include="Design Patterns\Observer\Subject.cs" />
     <Compile Include="Design Patterns\Singleton\Singleton.cs" />
+    <Compile Include="Design Patterns\Builder\SingleNodeBuilder.cs" />
+    <Compile Include="Design Patterns\Builder\Director.cs" />
     <Compile Include="YAMLEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

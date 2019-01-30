@@ -18,10 +18,13 @@ namespace YAMLEditor
 {
     public partial class YAMLEditorForm : Form
     {
-        Singleton nodeSingleton = Singleton.Instance();
+        private Singleton nodeSingleton = Singleton.Instance();
         private CommandManager cManager = new CommandManager();
         private Subject subject = new Subject();
         private TreeObserver observer;
+
+        private Director director = new Director();
+        
 
         public YAMLEditorForm()
         {
@@ -184,8 +187,6 @@ namespace YAMLEditor
 
         private void OnAfterSelect( object sender, TreeViewEventArgs e )
         {
-            mainPropertyGrid.SelectedObject = e.Node.Tag;
-
             int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
 
             var value = e.Node.Text.Substring(spaceIndex);
@@ -614,7 +615,7 @@ namespace YAMLEditor
         }
 
         //Edit node
-        private void button1_Click(object sender, EventArgs e)
+        private void EditNode(object sender, EventArgs e)
         {
             TreeNode node = mainTreeView.SelectedNode;
 
@@ -667,7 +668,13 @@ namespace YAMLEditor
         private void newSameLvl(object sender, EventArgs e)
         {
             TreeNode node = mainTreeView.SelectedNode;
-            node.Parent.Nodes.Add("type: value");
+            AbstractBuilder singleNodeBuilder = new SingleNodeBuilder();
+
+            director.Construct(singleNodeBuilder);
+
+            var nodeToAdd = singleNodeBuilder.GetResult();
+
+            node.Parent.Nodes.Add(nodeToAdd);
 
             int nChilds = node.Parent.GetNodeCount(false);
 
@@ -678,12 +685,25 @@ namespace YAMLEditor
         private void newChild(object sender, EventArgs e)
         {
             TreeNode node = mainTreeView.SelectedNode;
-            node.Nodes.Add("type: value");
+            AbstractBuilder singleNodeBuilder = new SingleNodeBuilder();
+
+            director.Construct(singleNodeBuilder);
+
+            var nodeToAdd = singleNodeBuilder.GetResult();
+
+            node.Nodes.Add(nodeToAdd);
 
             int nChilds = node.GetNodeCount(false);
 
             cManager.addCommand(node.Nodes[nChilds - 1], "add");
             subject.Notify();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string type = listBox1.SelectedItem.ToString();
+
+
         }
     }
 }
