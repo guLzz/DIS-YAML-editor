@@ -76,7 +76,7 @@ namespace YAMLEditor
                 root.Expand();
             }
 
-            //subject.Notify();
+            subject.Notify();
         }
 
         private void LoadFile( TreeNode node, string filename )
@@ -200,6 +200,7 @@ namespace YAMLEditor
                 label2.Visible = false;
                 label3.Visible = false;
                 label4.Visible = false;
+                label5.Visible = false;
                 listBox1.Visible = false;
             }
             else
@@ -214,15 +215,15 @@ namespace YAMLEditor
                     label3.Visible = true;
                     label4.Visible = true;
                     listBox1.Visible = true;
+                    newTypeB.Visible = true;
+                    label5.Visible = true;
 
                     int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
 
                     var value = e.Node.Text.Substring(spaceIndex);
 
                     OldValueTextB.Text = value;
-
-                    newTypeB.Visible = true;
-
+                    
                     var type = e.Node.Text.Substring(0, spaceIndex - 2);
 
                     newTypeB.Text = type;
@@ -247,15 +248,15 @@ namespace YAMLEditor
                     label3.Visible = true;
                     label4.Visible = true;
                     listBox1.Visible = true;
+                    newTypeB.Visible = false;
+                    label5.Visible = false;
 
                     int spaceIndex = e.Node.Text.IndexOf(" ") + 1;
 
                     var value = e.Node.Text.Substring(spaceIndex);
 
                     OldValueTextB.Text = value;
-
-                    newTypeB.Visible = false;
-
+                    
                     newTypeB.Text = "";
 
                     listBox1.SelectedIndex = 1;
@@ -270,13 +271,13 @@ namespace YAMLEditor
                     label3.Visible = true;
                     label4.Visible = true;
                     listBox1.Visible = true;
+                    newTypeB.Visible = false;
+                    label5.Visible = false;
 
-                    var value = e.Node.Text.Substring(0, e.Node.Text.Length - 1);
+                    var value = e.Node.Text;
 
                     OldValueTextB.Text = value;
-
-                    newTypeB.Visible = false;
-
+                    
                     newTypeB.Text = "";
 
                     listBox1.SelectedIndex = 2;
@@ -295,6 +296,7 @@ namespace YAMLEditor
                         label2.Visible = false;
                         label3.Visible = false;
                         label4.Visible = false;
+                        label5.Visible = false;
                         listBox1.Visible = false;
 
 
@@ -309,13 +311,13 @@ namespace YAMLEditor
                         label3.Visible = true;
                         label4.Visible = true;
                         listBox1.Visible = true;
+                        newTypeB.Visible = false;
+                        label5.Visible = false;
 
-                        var value = e.Node.Text.Substring(0, e.Node.Text.Length - 1);
+                        var value = e.Node.Text;
 
                         OldValueTextB.Text = value;
-
-                        newTypeB.Visible = false;
-
+                        
                         newTypeB.Text = "";
 
                         listBox1.SelectedIndex = 4;
@@ -332,21 +334,20 @@ namespace YAMLEditor
                     label3.Visible = true;
                     label4.Visible = true;
                     listBox1.Visible = true;
+                    newTypeB.Visible = false;
+                    label5.Visible = false;
 
-                    var value = e.Node.Text.Substring(0, e.Node.Text.Length - 1);
+                    var value = e.Node.Text;
 
                     OldValueTextB.Text = value;
 
-                    newTypeB.Visible = false;
-
                     newTypeB.Text = "";
 
-                    listBox1.SelectedIndex = 5;
+                    listBox1.SelectedIndex = 4;
                 }
             }
         }
 
-        //descobrir de onde vem
         private void OnDoubleClick( object sender, EventArgs e )
         {
             if ( mainTreeView.SelectedNode == null ) return;
@@ -362,8 +363,7 @@ namespace YAMLEditor
                 }
             }
         }
-
-       
+        
         private void onSave(object sender, EventArgs e)
         {
             if (mainTreeView.TopNode != null)
@@ -385,11 +385,8 @@ namespace YAMLEditor
                     saveAsToolStripMenuItem_Click(sender, e);
                 }
             }
-            
-            
         }
-
-
+        
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (mainTreeView.TopNode != null)
@@ -407,7 +404,6 @@ namespace YAMLEditor
                     }
                     File.Delete(Program.path + "recover.yaml");
                 }
-
             }
         }
 
@@ -415,10 +411,8 @@ namespace YAMLEditor
         {
             mainTreeView.Nodes.Clear();
             mainTreeView.Nodes.Add("type: value");
-
         }
-
-
+        
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (mainTreeView.TopNode != null)
@@ -441,36 +435,52 @@ namespace YAMLEditor
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("halp");
+            MessageBox.Show("We also need it!");
             
         }
-
-
-
+        
         //Edit node
         private void EditNode(object sender, EventArgs e)
         {
             TreeNode node = mainTreeView.SelectedNode;
-
             cManager.addCommand(node, "edit");
-            node.Text = newTypeB.Text + ": " + newValueTextB.Text;
 
-            //update old textbox
-            int spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
-
-            var value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
-
-            OldValueTextB.Text = value;
-
-            if (spaceIndex > 0)
+            switch (listBox1.SelectedIndex)
             {
-                var type = mainTreeView.SelectedNode.Text.Substring(0, spaceIndex - 2);
+                case 0:
+                    node.Text = newTypeB.Text + ": " + newValueTextB.Text;
+                    OldValueTextB.Text = node.Text;
+                    newTypeB.Text = "";
+                    break;
 
-                newTypeB.Text = type;
+                case 1:
+                    node.Text = "password: " + newValueTextB.Text;
+                    OldValueTextB.Text = node.Text;
+                    newTypeB.Text = "";
+                    break;
+
+                case 2:
+                    node.Text = newValueTextB.Text;
+                    OldValueTextB.Text = node.Text;
+                    newTypeB.Text = "";
+                    break;
+
+                case 3:
+                    node.Text = newTypeB.Text + ": " + newValueTextB.Text;
+                    OldValueTextB.Text = node.Text;
+                    newTypeB.Text = "";
+                    break;
+
+                case 4:
+                    node.Text = newValueTextB.Text;
+                    OldValueTextB.Text = node.Text;
+                    newTypeB.Text = "";
+                    break;
+                    
+                default:
+                    break;
             }
-            else
-                newTypeB.Text = "";
-
+            
 
             subject.Notify();
 
@@ -540,5 +550,106 @@ namespace YAMLEditor
             
         }
 
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TreeNode node = mainTreeView.SelectedNode;
+            int spaceIndex;
+            var value = "";
+            switch (listBox1.SelectedIndex)
+            {
+                case 0:
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+                    newTypeB.Visible = true;
+                    label5.Visible = true;
+
+                    spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
+
+                    value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
+                    OldValueTextB.Text = value;
+                    break;
+
+                case 1:
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+                    newTypeB.Visible = false;
+                    label5.Visible = false;
+
+                    spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
+
+                    value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
+                    OldValueTextB.Text = value;
+                    break;
+
+                case 2:
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+                    newTypeB.Visible = false;
+                    label5.Visible = false;
+
+                    spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
+
+                    value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
+                    OldValueTextB.Text = value;
+                    break;
+
+                case 3:
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+                    newTypeB.Visible = true;
+                    label5.Visible = true;
+
+                    spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
+
+                    value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
+                    OldValueTextB.Text = value;
+                    break;
+
+                case 4:
+                    newValueTextB.Visible = true;
+                    OldValueTextB.Visible = true;
+                    button1.Visible = true;
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    listBox1.Visible = true;
+                    newTypeB.Visible = false;
+                    label5.Visible = false;
+
+                    spaceIndex = mainTreeView.SelectedNode.Text.IndexOf(" ") + 1;
+
+                    value = mainTreeView.SelectedNode.Text.Substring(spaceIndex);
+                    OldValueTextB.Text = value;
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }

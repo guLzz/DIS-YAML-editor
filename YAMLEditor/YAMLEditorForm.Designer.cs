@@ -81,6 +81,7 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.newNode = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.label5 = new System.Windows.Forms.Label();
             this.mainMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
@@ -194,7 +195,7 @@
             this.undoToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("undoToolStripMenuItem.Image")));
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(224, 34);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
@@ -203,14 +204,14 @@
             this.redoToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("redoToolStripMenuItem.Image")));
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(224, 34);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.redoToolStripMenuItem.Text = "&Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(168, 6);
             // 
             // helpToolStripMenuItem
             // 
@@ -323,6 +324,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.listBox1);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.label3);
@@ -350,21 +352,23 @@
             "Password",
             "Multiple Option",
             "Multiple Value",
-            "Option",
-            "Sensor"});
+            "Option"});
             this.listBox1.Location = new System.Drawing.Point(52, 74);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(167, 148);
+            this.listBox1.Size = new System.Drawing.Size(167, 116);
             this.listBox1.TabIndex = 8;
+            this.listBox1.Visible = false;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(301, 173);
+            this.label4.Location = new System.Drawing.Point(301, 145);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 17);
             this.label4.TabIndex = 7;
             this.label4.Text = "new";
+            this.label4.Visible = false;
             // 
             // label3
             // 
@@ -374,6 +378,7 @@
             this.label3.Size = new System.Drawing.Size(30, 17);
             this.label3.TabIndex = 6;
             this.label3.Text = "Old";
+            this.label3.Visible = false;
             // 
             // label2
             // 
@@ -384,6 +389,7 @@
             this.label2.Size = new System.Drawing.Size(57, 25);
             this.label2.TabIndex = 5;
             this.label2.Text = "Type";
+            this.label2.Visible = false;
             // 
             // label1
             // 
@@ -394,14 +400,15 @@
             this.label1.Size = new System.Drawing.Size(63, 25);
             this.label1.TabIndex = 4;
             this.label1.Text = "Value";
+            this.label1.Visible = false;
             // 
             // newTypeB
             // 
             this.newTypeB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.newTypeB.Location = new System.Drawing.Point(78, 308);
+            this.newTypeB.Location = new System.Drawing.Point(341, 230);
             this.newTypeB.Margin = new System.Windows.Forms.Padding(4);
             this.newTypeB.Name = "newTypeB";
-            this.newTypeB.Size = new System.Drawing.Size(123, 30);
+            this.newTypeB.Size = new System.Drawing.Size(151, 30);
             this.newTypeB.TabIndex = 3;
             this.newTypeB.Visible = false;
             // 
@@ -414,15 +421,17 @@
             this.OldValueTextB.ReadOnly = true;
             this.OldValueTextB.Size = new System.Drawing.Size(151, 30);
             this.OldValueTextB.TabIndex = 2;
+            this.OldValueTextB.Visible = false;
             // 
             // newValueTextB
             // 
             this.newValueTextB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.newValueTextB.Location = new System.Drawing.Point(341, 163);
+            this.newValueTextB.Location = new System.Drawing.Point(341, 135);
             this.newValueTextB.Margin = new System.Windows.Forms.Padding(4);
             this.newValueTextB.Name = "newValueTextB";
             this.newValueTextB.Size = new System.Drawing.Size(151, 30);
             this.newValueTextB.TabIndex = 1;
+            this.newValueTextB.Visible = false;
             // 
             // button1
             // 
@@ -433,6 +442,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Change";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.EditNode);
             // 
             // helpTabPage
@@ -596,6 +606,17 @@
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(6, 47);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(394, 201);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(43, 25);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "key";
+            this.label5.Visible = false;
+            // 
             // YAMLEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -680,6 +701,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabPage helpTabPage;
         private System.Windows.Forms.WebBrowser mainWebBrowser;
+        private System.Windows.Forms.Label label5;
     }
 }
 
