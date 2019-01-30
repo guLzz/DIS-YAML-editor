@@ -1,6 +1,7 @@
 ################################################################
 ## Unused automations
 ################################################################
+id:
 - id: ring_camera_notification
   alias: 'Notify Ring camera'
   initial_state: 'on'

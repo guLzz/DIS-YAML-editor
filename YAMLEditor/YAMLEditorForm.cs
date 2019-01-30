@@ -35,8 +35,8 @@ namespace YAMLEditor
                 if (result == DialogResult.Yes)
                 {
                     onRecover(Program.path);
-                    File.Delete(Program.path + "recover.yaml");
                 }
+                File.Delete(Program.path + "recover.yaml");
             }
         }
 
@@ -73,7 +73,7 @@ namespace YAMLEditor
                 root.Expand();
             }
 
-            subject.Notify();
+            //subject.Notify();
         }
 
         private void LoadFile( TreeNode node, string filename )

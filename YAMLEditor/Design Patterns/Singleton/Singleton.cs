@@ -71,7 +71,11 @@ namespace YAMLEditor
 
             if (spaceIndex == -1)
             {
-                if (hasHyphen)
+                if (hasHyphen && node.SelectedImageIndex == 0)
+                {
+                    code += "- " + node.Text + "\n";
+                }
+                else if (hasHyphen && node.SelectedImageIndex != 0)
                 {
                     code += "- " + node.Text + ":\n";
                 }
@@ -125,7 +129,7 @@ namespace YAMLEditor
                     if (isIf)
                     {
                         code += nodeKey + ": >-\n";
-                        code += nodeToCodeIf(nodeValue, tabsRequired);
+                        code += nodeToCodeIf(nodeValue, tabsRequired, false);
 
                     }
                     else if (nodeKey == "alias" || nodeKey == "at" || nodeKey == "api_key" || nodeKey == "target" || nodeKey == "message"
@@ -185,7 +189,7 @@ namespace YAMLEditor
                     if (isIf)
                     {
                         code += nodeKey + ": >-\n";
-                        code += nodeToCodeIf(nodeValue, tabsRequired);
+                        code += nodeToCodeIf(nodeValue, tabsRequired, false);
 
                     }
                     else if (nodeKey == "alias" || nodeKey == "at" || nodeKey == "api_key" || nodeKey == "target" || nodeKey == "message"
@@ -209,21 +213,29 @@ namespace YAMLEditor
             {
                 for (int i = 0; i < subNodeCount; i++)
                 {
-                    var subSubNodeCount = node.Nodes[i].GetNodeCount(false);
-
-                    for (int j = 0; j < subSubNodeCount; j++)
+                    if (node.Nodes[i].SelectedImageIndex == 0)
                     {
-                        if (j == 0)
+                        code += nodeToCode(node.Nodes[i], tabsRequired+1, true);
+                    }
+                    else
+                    {
+                        var subSubNodeCount = node.Nodes[i].GetNodeCount(false);
+
+                        for (int j = 0; j < subSubNodeCount; j++)
                         {
-                            code += nodeToCode(node.Nodes[i].Nodes[j], tabsRequired, true);
-                        }
-                        else
-                        {
-                            code += nodeToCode(node.Nodes[i].Nodes[j], tabsRequired + 1, false);
+                            if (j == 0)
+                            {
+                                code += nodeToCode(node.Nodes[i].Nodes[j], tabsRequired, true);
+                            }
+                            else
+                            {
+                                code += nodeToCode(node.Nodes[i].Nodes[j], tabsRequired + 1, false);
+                            }
                         }
                     }
                     if (tabsRequired == 0)
                         code += "\n";
+
                 }
             }
             else
@@ -237,7 +249,7 @@ namespace YAMLEditor
             return code;
         }
 
-        private string nodeToCodeIf(string nodeValue, int tabsRequired)
+        private string nodeToCodeIf(string nodeValue, int tabsRequired, bool foundEnd)
         {
             var code = "";
             var tab = "  ";
@@ -258,12 +270,16 @@ namespace YAMLEditor
                 beginOfLine = nodeValue.IndexOf("{%");
                 endOfLine = nodeValue.IndexOf("%}");
 
+                if (nodeValue.Length < endOfLine - beginOfLine + 2) return code;
+
                 line = nodeValue.Substring(beginOfLine, (endOfLine - beginOfLine) + 2);
 
-                if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
+                if (nodeValue.Length != endOfLine + 2)       //check for more lines
                 {
-                    newvalue = nodeValue.Substring(endOfLine + 3);
+                    newvalue = nodeValue.Substring(endOfLine + 2);
                 }
+
+                
 
                 for (int t = 0; t < tabsRequired + 2; t++)
                 {
@@ -271,10 +287,23 @@ namespace YAMLEditor
                 }
 
                 code += line + "\n";
+                
 
                 if (newvalue.Length > 0)
                 {
-                    code += nodeToCodeIf(newvalue, tabsRequired);
+                    if(newvalue.IndexOf("end") < newvalue.IndexOf("{{") && newvalue.IndexOf("{{") != -1)
+                    {
+                        code += nodeToCodeIf(newvalue, tabsRequired - 1, true);
+                    }
+                    else if(newvalue.IndexOf("{%") < newvalue.IndexOf("{{") && newvalue.IndexOf("el") > newvalue.IndexOf("%}"))
+                    {
+                        code += nodeToCodeIf(newvalue, tabsRequired + 1, false);
+                    }
+                    else
+                    {
+
+                        code += nodeToCodeIf(newvalue, tabsRequired, false);
+                    }
                 }
             }
             else
@@ -286,10 +315,10 @@ namespace YAMLEditor
 
                 if (nodeValue.Length != (endOfLine - beginOfLine) + 2)       //check for more lines
                 {
-                    newvalue = nodeValue.Substring(endOfLine + 3);
+                    newvalue = nodeValue.Substring(endOfLine + 2);
                 }
 
-                for (int t = 0; t < tabsRequired + 4; t++)
+                for (int t = 0; t < tabsRequired + 3; t++)
                 {
                     code += tab;
                 }
@@ -298,7 +327,7 @@ namespace YAMLEditor
 
                 if (newvalue.Length > 0)
                 {
-                    code += nodeToCodeIf(newvalue, tabsRequired);
+                    code += nodeToCodeIf(newvalue, tabsRequired, false);
                 }
 
             }
